@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ['./src/**/*.{html,js,jsx}'],
+  mode: 'jit',
   theme: {
     fontFamily: {
       Roboto: ['Roboto', 'sans-serif'],
@@ -13,6 +14,11 @@ module.exports = {
         '800px': '800px',
         '1300px': '1300px',
         '400px': '400px',
+      },
+      colors: {
+        'brown-semidark': '#6b540f',
+        'brown-dark': '#171203',
+        'brown-lightdark': '#EBE0C2',
       },
     },
   },
