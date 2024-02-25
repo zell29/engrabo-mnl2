@@ -34,6 +34,8 @@ Note: Please add comments for everything you do in the code, and give a comments
 - Simple react snippets
 - Mithril Emmet
 - Firefly Pro
+- Tailwind CSS IntelliSense
+- Thunder Client
 
 ## Before you start just do the following:
 
