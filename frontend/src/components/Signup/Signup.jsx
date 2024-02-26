@@ -3,8 +3,10 @@ import { AiOutlineEyeInvisible, AiOutlineEye } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
 import styles from '../../styles/style';
 //import logo from '../../assets/Logo/engrabo-logo.png';
-const Login = () => {
+
+const Signup = () => {
   const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [visible, setVisible] = useState('');
   return (
@@ -12,12 +14,31 @@ const Login = () => {
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         {/*<img src={logo} alt="Engrabo Logo" className="m-0 p-0" />*/}
         <h2 className="mt-6 text-center text-3xl font-extrabold text-brown-dark">
-          Login to your account
+          Register your account
         </h2>
       </div>
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded lg:px-10">
           <form action="" className="space-y-6">
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-brown-semidark"
+              >
+                Full Name
+              </label>
+              <div className="mt-1">
+                <input
+                  type="text"
+                  name="name"
+                  autoComplete="name"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="appearance-none block w-full px-3 py-2 border border-brown-lightdark rounded-md shadow-sm placeholder-brown-lightdark focus:outline-none focus:ring-brown-semidark focus:border-brown-semidark"
+                />
+              </div>
+            </div>
             <div>
               <label
                 htmlFor="email"
@@ -69,30 +90,7 @@ const Login = () => {
                 )}
               </div>
             </div>
-            <div className={`${styles.normalFlex} justify-between`}>
-              <div className={`${styles.normalFlex}`}>
-                <input
-                  type="checkbox"
-                  name="remember-me"
-                  id="remember-me"
-                  className="h-4 w-4 text-brown-semidark focus:ring-brown-semidark border-brown-lightdark rounded"
-                />
-                <label
-                  htmlFor="remember-me"
-                  className="ml-2 block text-sm text-brown-semidark"
-                >
-                  Remember me
-                </label>
-              </div>
-              <div className="text-sm">
-                <a
-                  href=".forgot-password"
-                  className="font-medium  text-brown-semidark hover:text-brown-dark"
-                >
-                  Forgot your password?
-                </a>
-              </div>
-            </div>
+
             <div>
               <button
                 type="submit"
@@ -117,4 +115,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Signup;
