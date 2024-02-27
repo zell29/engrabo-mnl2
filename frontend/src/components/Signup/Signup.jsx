@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
-import { AiOutlineEyeInvisible, AiOutlineEye } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
+import { AiOutlineEyeInvisible, AiOutlineEye } from 'react-icons/ai';
+import { RxAvatar } from 'react-icons/rx';
+import Homebackground from '../../assets/Logo/home-background.jpg';
+
 import styles from '../../styles/style';
 //import logo from '../../assets/Logo/engrabo-logo.png';
 
@@ -9,6 +12,16 @@ const Signup = () => {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [visible, setVisible] = useState('');
+  const [avatar, setAvatar] = useState('');
+
+  const handleSubmit = () => {
+    console.log('#ffff');
+  };
+
+  const handleFileInputChange = (e) => {
+    const file = e.target.files[0];
+    setAvatar(file);
+  };
   return (
     <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -17,9 +30,17 @@ const Signup = () => {
           Register your account
         </h2>
       </div>
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded lg:px-10">
-          <form action="" className="space-y-6">
+      <div className="flex flex-col mt-6 sm:mx-auto sm:flex-row sm:max-w-screen-xl">
+        <div className="w-full sm:w-auto hidden sm:block ">
+          <img
+            src={Homebackground}
+            alt="Engrabo Logo"
+            className="m-0 p-0 w-full sm:w-auto"
+            style={{ width: 484, height: 484 }}
+          />
+        </div>
+        <div className="bg-white py-8 px-4 shadow sm:rounded lg:px-10 sm:w-full sm:max-w-md sm:ml-aut">
+          <form action="" className="w-full space-y-6">
             <div>
               <label
                 htmlFor="email"
@@ -92,6 +113,40 @@ const Signup = () => {
             </div>
 
             <div>
+              <label
+                htmlFor="avatar"
+                className="block text-sm font-medium text-brown-semidark"
+              ></label>
+              <div className="mt-2 flex items-center">
+                <span className="inline-block h-8 w-8 rounded-full overflow-hidden">
+                  {avatar ? (
+                    <img
+                      src={URL.createObjectURL(avatar)}
+                      alt="avatar"
+                      className="h-full w-full object-cover rounded-full"
+                    />
+                  ) : (
+                    <RxAvatar className="h-8 w-8" />
+                  )}
+                </span>
+                <label
+                  htmlFor="file-input"
+                  className="ml-5 flex items-center justify-center px-4 py-2 border border-brown-lightdark rounded-md shadow-sm text-sm font-medium  text-brown-semidark bg-white hover:border-brown-semidark"
+                >
+                  <span>Upload a profile</span>
+                  <input
+                    type="file"
+                    name="avatar"
+                    id="file-input"
+                    accept=".jpg,.jpeg,.png"
+                    onChange={handleFileInputChange}
+                    className="sr-only"
+                  />
+                </label>
+              </div>
+            </div>
+
+            <div>
               <button
                 type="submit"
                 className="group relative w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-brown-lightdark bg-brown-semidark hover:bg-brown-dark"
@@ -100,12 +155,12 @@ const Signup = () => {
               </button>
             </div>
             <div className={`${styles.normalFlex} w-full`}>
-              <h4>Not have any account?</h4>
+              <h4>Already have an account?</h4>
               <Link
-                to="/sign-up"
+                to="/login"
                 className="ml-2 text-brown-semidark hover:text-brown-dark"
               >
-                Sign Up
+                Sign In
               </Link>
             </div>
           </form>

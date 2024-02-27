@@ -16,9 +16,11 @@ module.exports = {
         '400px': '400px',
       },
       colors: {
-        'brown-semidark': '#6b540f',
         'brown-dark': '#171203',
+        'brown-semidark': '#6b540f',
         'brown-lightdark': '#EBE0C2',
+        'brown-light': '#fff7e3',
+        'brown-semilight': '#faf6ec',
       },
     },
   },

@@ -3,6 +3,7 @@ import { AiOutlineEyeInvisible, AiOutlineEye } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
 import styles from '../../styles/style';
 //import logo from '../../assets/Logo/engrabo-logo.png';
+import Homebackground from '../../assets/Logo/home-background.jpg';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -15,9 +16,17 @@ const Login = () => {
           Login to your account
         </h2>
       </div>
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded lg:px-10">
-          <form action="" className="space-y-6">
+      <div className="flex flex-col mt-6 sm:mx-auto sm:flex-row sm:max-w-screen-xl">
+        <div className="w-full sm:w-auto hidden sm:block ">
+          <img
+            src={Homebackground}
+            alt="Engrabo Logo"
+            className="m-0 p-0 w-full sm:w-auto"
+            style={{ width: 448, height: 376 }}
+          />
+        </div>
+        <div className="bg-white py-8 px-4 shadow sm:rounded lg:px-10 sm:w-full sm:max-w-md sm:ml-auto">
+          <form action="" className="w-full space-y-6">
             <div>
               <label
                 htmlFor="email"
