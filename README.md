@@ -2,6 +2,16 @@
 
 Note: Please add comments for everything you do in the code, and give a comments also when you want to commit something
 
+## Reference:
+
+- https://www.youtube.com/watch?v=XxnUSZOgMLY (1hr 48 secs)
+- https://www.youtube.com/watch?v=5ZodHXPAJCQ&list=PLyah27R0n8V4Kcao94Qlt-xJ0bHxZfBjk&index=2
+- https://www.youtube.com/watch?v=LfI7H8zZSpg&list=PLyah27R0n8V4Kcao94Qlt-xJ0bHxZfBjk&index=3
+- https://www.youtube.com/watch?v=x2kwp-_m17I&list=PLyah27R0n8V4Kcao94Qlt-xJ0bHxZfBjk&index=4
+- https://www.youtube.com/watch?v=mOVcdWZXl9o&list=PLyah27R0n8V4Kcao94Qlt-xJ0bHxZfBjk&index=5
+- https://www.youtube.com/watch?v=GMhPQApoFX4&list=PLyah27R0n8V4Kcao94Qlt-xJ0bHxZfBjk&index=6
+- https://www.youtube.com/watch?v=IC00WCJl4j4&list=PLyah27R0n8V4Kcao94Qlt-xJ0bHxZfBjk&index=7
+
 ## Extension needed on vscode:
 
 - Prettier - Code Formatter
