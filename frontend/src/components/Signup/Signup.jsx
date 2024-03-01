@@ -3,9 +3,8 @@ import { Link } from 'react-router-dom';
 import { AiOutlineEyeInvisible, AiOutlineEye } from 'react-icons/ai';
 import { RxAvatar } from 'react-icons/rx';
 import Homebackground from '../../assets/Logo/home-background.jpg';
-import axios from 'axios';
 import styles from '../../styles/style';
-import { server } from '../../server';
+
 //import logo from '../../assets/Logo/engrabo-logo.png';
 
 const Signup = () => {
@@ -22,24 +21,6 @@ const Signup = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const config = {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    };
-    const newForm = new FormData();
-
-    newForm.append('file', avatar);
-    newForm.append('name', name);
-    newForm.append('email', email);
-    newForm.append('password', password);
-
-    axios
-      .post(`${server}/user/create-user`, newForm, config)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
   };
 
   return (
@@ -60,7 +41,7 @@ const Signup = () => {
           />
         </div>
         <div className="bg-white py-8 px-4 shadow sm:rounded lg:px-10 sm:w-full sm:max-w-md sm:ml-aut">
-          <form action="" className="w-full space-y-6" onSubmit={handleSubmit}>
+          <form action="" className="w-full space-y-6">
             <div>
               <label
                 htmlFor="email"
