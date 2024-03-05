@@ -136,7 +136,7 @@ const Header = ({ activeHeading }) => {
           <div className="flex">
             <div className={`${styles.normalFlex}`}>
               <div className="relative cursor-pointer mr-[15px]">
-                <GoHeart size={30} color="rgb(255 255 255 /83%)" />
+                <GoHeart size={30} color="#fff4d7" />
                 <span className="absolute right-0 top-0 rounded-full bg-[#b19b56] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px] leading-tight text-center">
                   0
                 </span>
@@ -145,10 +145,7 @@ const Header = ({ activeHeading }) => {
 
             <div className={`${styles.normalFlex}`}>
               <div className="relative cursor-pointer mr-[15px]">
-                <AiOutlineShoppingCart
-                  size={30}
-                  color="rgb(255 255 255 /83%)"
-                />
+                <AiOutlineShoppingCart size={30} color="#fff4d7" />
                 <span className="absolute right-0 top-0 rounded-full bg-[#b19b56] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px] leading-tight text-center">
                   0
                 </span>
@@ -158,7 +155,7 @@ const Header = ({ activeHeading }) => {
             <div className={`${styles.normalFlex}`}>
               <div className="relative cursor-pointer mr-[15px]">
                 <Link to="/login">
-                  <LuUserCircle2 size={30} color="rgb(255 255 255 /83%)" />
+                  <LuUserCircle2 size={30} color="#fff4d7" />
                 </Link>
               </div>
             </div>
