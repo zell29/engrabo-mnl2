@@ -320,10 +320,9 @@ export const productData = [
     rating: 5,
     total_sell: 80,
     stock: 10,
-    category: 'Mobile & Tablets',
   },
   {
-    id: 1,
+    id: 3,
     category: 'Computers and Laptop',
     name: 'MacBook pro M2 chipset 256gb ssd 8gb ram space gray color with apple 1 year warranty',
     description:
@@ -351,7 +350,6 @@ export const productData = [
     rating: 4,
     total_sell: 75,
     stock: 10,
-    category: 'Computers & Laptop',
   },
   {
     id: 4,
@@ -413,7 +411,6 @@ export const productData = [
     rating: 5,
     total_sell: 49,
     stock: 10,
-    category: 'Shoes',
   },
   {
     id: 1,
