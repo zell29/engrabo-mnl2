@@ -58,7 +58,7 @@ const Slider = () => {
                   <p>{slide.desc}</p>
                   <hr />
                   <button
-                    className={`${styles.button} z-50 relative `}
+                    className={`${styles.button} z-50 relative hover:opacity-95 transition duration-300 ease-in-out`}
                     onClick={() => navigate('/products')}
                   >
                     Shop Now

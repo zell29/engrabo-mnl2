@@ -86,7 +86,9 @@ const Header = ({ activeHeading }) => {
             ) : null}
           </div>
 
-          <div className={`${styles.button}`}>
+          <div
+            className={`${styles.button} hover:opacity-95 transition duration-300 ease-in-out`}
+          >
             <Link to="/best-offer">
               <h1 className="text-[#fff4d7] flex items-center">
                 Best Offer <IoIosArrowForward />
