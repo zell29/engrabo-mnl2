@@ -3,6 +3,8 @@ import Header from '../components/Layout/Header';
 import Slider from '../components/Route/Slider/Slider';
 import Categories from '../components/Route/Categories/Categories';
 import BestDeals from '../components/Route/BestDeals/BestDeals';
+import FeaturedProduct from '../components/Route/FeaturedProduct/FeaturedProduct';
+import Events from '../components/Route/Events/Events';
 const HomePage = () => {
   return (
     <div>
@@ -10,6 +12,8 @@ const HomePage = () => {
       <Slider />
       <Categories />
       <BestDeals />
+      <Events />
+      <FeaturedProduct />
     </div>
   );
 };
