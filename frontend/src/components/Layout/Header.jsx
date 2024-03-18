@@ -11,13 +11,17 @@ import DropDown from './DropDown';
 import Navbar from './Navbar';
 import { GoHeart } from 'react-icons/go';
 import { LuUserCircle2 } from 'react-icons/lu';
+import { useSelector } from 'react-redux';
+import { backend_url } from '../../server';
+//import { backend_url } from '../../server';
 
 const Header = ({ activeHeading }) => {
+  const { isAuthenticated, user } = useSelector((state) => state.user);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchData, setSearchData] = useState(null);
   const [active, setActive] = useState(false);
   const [dropDown, setDropDown] = useState(false);
-
+  console.log(user?.avatar?.url);
   // Search Function
   const handleSearchChange = (e) => {
     const term = e.target.value;
@@ -116,7 +120,6 @@ const Header = ({ activeHeading }) => {
               <button
                 className={`h-[100%] w-full flex justify-between items-center pl-10 bg-[#fff4d7] font-sans text-lg font-[500] select-none rounded-t-md text-[#171203]`}
               >
-                {' '}
                 All Categories
               </button>
               <IoIosArrowDown
@@ -157,11 +160,22 @@ const Header = ({ activeHeading }) => {
               </div>
             </div>
 
+            {/* Login */}
             <div className={`${styles.normalFlex}`}>
               <div className="relative cursor-pointer mr-[15px]">
-                <Link to="/login">
-                  <LuUserCircle2 size={30} color="#fff4d7" />
-                </Link>
+                {isAuthenticated ? (
+                  <Link to="/profile">
+                    <img
+                      src={`${backend_url}/${user.avatar.url}`}
+                      className="w-[30px] h-[30px] rounded-full"
+                      alt="User Avatar"
+                    />
+                  </Link>
+                ) : (
+                  <Link to="/login">
+                    <LuUserCircle2 size={30} color="#fff4d7" />
+                  </Link>
+                )}
               </div>
             </div>
           </div>

@@ -29,7 +29,8 @@ router.post('/create-user', upload.single('file'), async (req, res, next) => {
       return next(new ErrorHandler('User already exists', 400));
     }
 
-    const fileUrl = req.file ? req.file.path : '';
+    const fileUrl = req.file ? req.file.filename : '';
+
     const publicId = req.file ? req.file.filename : '';
 
     // Store user data in a temporary place or directly in the token if it's not too large (ensure sensitive info is securely handled)
