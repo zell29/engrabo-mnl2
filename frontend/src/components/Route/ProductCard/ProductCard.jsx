@@ -33,13 +33,13 @@ const ProductCard = ({ data }) => {
         </Link>
 
         {/* Shop Name of Product */}
-        <Link to="/">
+        {/* <Link to="/">
           <h5 className="text-[#b19b56]">{data.shop.name}</h5>
-        </Link>
+        </Link> */}
 
         <Link to={`/product/${product_name}`}>
           {/* Name of Product */}
-          <h4 className="pb-3 font-[500] text-[#171203]">
+          <h4 className="pt-6 pb-3 font-[500] text-[#171203]">
             {data.name.length > 40 ? data.name.slice(0, 40) + '...' : data.name}
           </h4>
 

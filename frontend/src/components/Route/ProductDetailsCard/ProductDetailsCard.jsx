@@ -43,7 +43,7 @@ const ProductDetailsCard = ({ setOpen, data }) => {
                 <img src={data.image_Url[0].url} alt="" />
 
                 {/* Other's Shop of the Product View */}
-                <div className="flex">
+                <div className="flex pt-2">
                   <img
                     src={data.shop.shop_avatar.url}
                     alt=""
@@ -61,7 +61,7 @@ const ProductDetailsCard = ({ setOpen, data }) => {
 
                 {/* Message shop of the Product View */}
                 <div
-                  className={`${styles.button} bg-[#171203] mt-4 rounded-[4px] h-11 hover:opacity-95 transition duration-300 ease-in-out`}
+                  className={`${styles.button} bg-[#171203] mt-4 !rounded-[4px] !h-11 hover:opacity-95 transition duration-300 ease-in-out`}
                   onClick={handleMessageSubmit}
                 >
                   <span className="text-[#fff4d7] flex items-center ">
@@ -100,7 +100,7 @@ const ProductDetailsCard = ({ setOpen, data }) => {
                   {/* Add and Dec number of a Product */}
                   <div>
                     <button
-                      className="bg-gradient-to-r from-[#534723] to-[#171203] text-white font-bold rounded-l px-4 py-2 shadow-lg hover:opacity-90 transition duration-300 ease-in-out"
+                      className="bg-gradient-to-r from-[#534723] to-[#171203] text-white font-bold !rounded px-4 py-2 shadow-lg hover:opacity-80 transition duration-300 ease-in-out"
                       onClick={decrementCount}
                     >
                       -
@@ -109,7 +109,7 @@ const ProductDetailsCard = ({ setOpen, data }) => {
                       {count}
                     </span>
                     <button
-                      className="bg-gradient-to-r from-[#534723] to-[#171203] text-white font-bold rounded-l px-4 py-2 shadow-lg hover:opacity-90 transition duration-300 ease-in-out"
+                      className="bg-gradient-to-r from-[#534723] to-[#171203] text-white font-bold !rounded px-4 py-2 shadow-lg hover:opacity-80 transition duration-300 ease-in-out"
                       onClick={incrementCount}
                     >
                       +
@@ -138,7 +138,7 @@ const ProductDetailsCard = ({ setOpen, data }) => {
                   </div>
                 </div>
                 <div
-                  className={`${styles.button} mt-6 rounded-[4px] h-11 flex items-center hover:opacity-95 transition duration-300 ease-in-out`}
+                  className={`${styles.button} mt-6 !rounded-[4px] !h-11 flex items-center hover:opacity-95 transition duration-300 ease-in-out`}
                 >
                   <span className="text-[#fff4d7] flex items-center">
                     Add to Cart <AiOutlineShoppingCart className="ml-1" />

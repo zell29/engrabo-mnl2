@@ -30,7 +30,7 @@ const Footer = () => {
             placeholder="Enter your email"
             className="text-gray-800 sm:w-72 w-full sm:mr-5 mr-1 lg:mb-0 mb-4 py-2.5 rounded px-2 focus:outline-none"
           />
-          <button className="bg-[#171203] hover:opacity-90 transition duration-300 ease-in-out px-5 py-2.5 rounded-md text-[#fff4d7] md:w-auto w-full">
+          <button className="bg-[#171203] hover:opacity-80 transition duration-300 ease-in-out px-5 py-2.5 rounded-md text-[#fff4d7] md:w-auto w-full">
             Submit
           </button>
         </div>
