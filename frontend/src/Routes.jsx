@@ -1,13 +1,16 @@
-import LoginPage from './pages/LoginPage.jsx';
-import SignupPage from './pages/SignupPage.jsx';
+import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
 import ActivationPage from './pages/ActivationPage';
 import HomePage from './pages/HomePage';
 import ProductsPage from './pages/ProductsPage';
-import BestSellingPage from './pages/BestSellingPage.jsx';
-import EventsPage from './pages/EventsPage.jsx';
-import FAQPage from './pages/FAQPage.jsx';
-import ProductDetailsPage from './pages/ProductDetailsPage.jsx';
-
+import BestSellingPage from './pages/BestSellingPage';
+import EventsPage from './pages/EventsPage';
+import FAQPage from './pages/FAQPage';
+import ProductDetailsPage from './pages/ProductDetailsPage';
+import ProfilePage from './pages/ProfilePage';
+import AdminCreatePage from './pages/AdminCreatePage';
+import AdminActivationPage from './pages/AdminActivationPage';
+import AdminLoginPage from './pages/AdminLoginPage';
 export {
   LoginPage,
   SignupPage,
@@ -18,4 +21,8 @@ export {
   EventsPage,
   FAQPage,
   ProductDetailsPage,
+  ProfilePage,
+  AdminCreatePage,
+  AdminActivationPage,
+  AdminLoginPage,
 };

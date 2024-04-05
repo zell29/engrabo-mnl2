@@ -37,7 +37,7 @@ const Slider = () => {
   }, [nextSlide, intervalTime, autoScroll]);
 
   return (
-    <div className="slider">
+    <div className="slider ">
       <AiOutlineArrowLeft className="arrow prev" onClick={prevSlide} />
       <AiOutlineArrowRight className="arrow next" onClick={nextSlide} />
       {sliderData.map((slide, index) => {
@@ -58,7 +58,7 @@ const Slider = () => {
                   <p>{slide.desc}</p>
                   <hr />
                   <button
-                    className={`${styles.button} z-50 relative hover:opacity-95 transition duration-300 ease-in-out`}
+                    className={`${styles.button} z-20 relative hover:opacity-95 transition duration-300 ease-in-out`}
                     onClick={() => navigate('/products')}
                   >
                     Shop Now

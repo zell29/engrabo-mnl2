@@ -1,22 +1,23 @@
 const express = require('express');
 const path = require('path');
-const User = require('../model/user');
+const Admin = require('../model/admin');
 const router = express.Router();
 const { upload } = require('../multer');
 const ErrorHandler = require('../utils/ErrorHandler');
-const catchAsyncErrors = require('../middleware/catchAsyncError');
+const catchAsyncError = require('../middleware/catchAsyncError');
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
-const sendMail = require('../utils/sendMail'); // Ensure this path is correct
+const sendMail = require('../utils/sendMail');
 const sendToken = require('../utils/jwtToken');
-const { isAuthenticated } = require('../middleware/auth');
+const { isAuthenticated, isAdmin } = require('../middleware/auth');
+const sendAdminToken = require('../utils/adminToken');
 
-router.post('/create-user', upload.single('file'), async (req, res, next) => {
+router.post('/create-admin', upload.single('file'), async (req, res, next) => {
   try {
-    const { name, email, password } = req.body;
-    const userEmail = await User.findOne({ email });
+    const { email, password } = req.body;
+    const adminEmail = await Admin.findOne({ email });
 
-    if (userEmail) {
+    if (adminEmail) {
       if (req.file) {
         const filename = req.file.filename;
         const filePath = `uploads/${filename}`;
@@ -28,33 +29,35 @@ router.post('/create-user', upload.single('file'), async (req, res, next) => {
       }
       return next(new ErrorHandler('User already exists', 400));
     }
-
     const fileUrl = req.file ? req.file.filename : '';
 
     const publicId = req.file ? req.file.filename : '';
 
-    // Store user data in a temporary place or directly in the token if it's not too large (ensure sensitive info is securely handled)
-    const activationToken = createActivationToken({
-      name,
-      email,
-      password: password, // Consider hashing the password before including it in the token
+    const admin = {
+      name: req.body.name,
+      email: email,
+      password: password,
       avatar: {
         public_id: publicId,
         url: fileUrl,
       },
-    });
+      address: req.body.address,
+      phoneNumber: req.body.phoneNumber,
+      zipCode: req.body.zipCode,
+    };
 
-    const activationUrl = `http://localhost:3000/activation/${activationToken}`;
+    const activationToken = createActivationToken(admin);
+    const activationUrl = `http://localhost:3000/admin/activation/${activationToken}`;
 
     await sendMail({
       email: email,
-      subject: 'Activate your account!',
-      message: `Hello ${name}, please click on the link to activate your account: ${activationUrl}`,
+      subject: 'Activate your Admin Account!',
+      message: `Hello ${admin.name}, please click on the link to activate your account: ${activationUrl}`,
     });
 
     res.status(201).json({
       success: true,
-      message: `Please check your email: ${email} to activate your account`,
+      message: `Please check your email: ${admin.email} to activate your account`,
     });
   } catch (error) {
     console.error('Error processing request:', error);
@@ -65,8 +68,8 @@ router.post('/create-user', upload.single('file'), async (req, res, next) => {
 });
 
 // Create activation token
-const createActivationToken = (payload) => {
-  return jwt.sign(payload, process.env.ACTIVATION_SECRET, {
+const createActivationToken = (admin) => {
+  return jwt.sign(admin, process.env.ACTIVATION_SECRET, {
     expiresIn: '5m',
   });
 };
@@ -74,45 +77,48 @@ const createActivationToken = (payload) => {
 // Activate user
 router.post(
   '/activation',
-  catchAsyncErrors(async (req, res, next) => {
+  catchAsyncError(async (req, res, next) => {
     try {
       const { activation_token } = req.body;
 
-      const newUser = jwt.verify(
+      const newAdmin = jwt.verify(
         activation_token,
         process.env.ACTIVATION_SECRET
       );
-      if (!newUser) {
+      if (!newAdmin) {
         return next(new ErrorHandler('Invalid Token', 400));
       }
 
-      const { name, email, password, avatar } = newUser;
+      const { name, email, password, avatar, zipCode, address, phoneNumber } =
+        newAdmin;
 
       // Check if user already exists
-      let user = await User.findOne({ email });
-      if (user) {
+      let admin = await Admin.findOne({ email });
+      if (admin) {
         return next(new ErrorHandler('User already exists', 400));
       }
-
       // Now, create the user with the verified information
-      user = await User.create({
+      admin = await Admin.create({
         name,
         email,
         avatar,
         password: password, // Ensure the password is hashed before saving
+        zipCode,
+        address,
+        phoneNumber,
       });
-
-      sendToken(user, 201, res); // Assuming this function handles token creation and response
+      console.log(admin);
+      sendAdminToken(admin, 201, res); // Assuming this function handles token creation and response
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
     }
   })
 );
 
-// Login user
+// Login admin
 router.post(
-  '/login-user',
-  catchAsyncErrors(async (req, res, next) => {
+  '/login-admin',
+  catchAsyncError(async (req, res, next) => {
     try {
       const { email, password } = req.body;
 
@@ -120,7 +126,7 @@ router.post(
         return next(new ErrorHandler('Please provide all the fields', 400));
       }
 
-      const user = await User.findOne({ email }).select('+password');
+      const user = await Admin.findOne({ email }).select('+password');
 
       if (!user) {
         return next(new ErrorHandler("User doesn't exists!", 400));
@@ -133,53 +139,36 @@ router.post(
           new ErrorHandler('Please enter your credentials correctly!', 400)
         );
       }
-      sendToken(user, 201, res);
+
+      // Log the admin's ID and email right before sending the token
+      console.log(`${user}`);
+
+      sendAdminToken(user, 201, res); // Assuming this function handles token creation and response
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
     }
   })
 );
 
-// Load user
+// Load admin
 router.get(
-  '/getuser',
-  isAuthenticated,
-  catchAsyncErrors(async (req, res, next) => {
+  '/getAdmin',
+  isAdmin,
+  catchAsyncError(async (req, res, next) => {
     try {
-      const user = await User.findById(req.user.id);
+      // console.log(req.admin);
+      const admin = await Admin.findById(req.admin._id);
 
-      if (!user) {
+      if (!admin) {
         return next(new ErrorHandler("User doesn't exists!", 400));
       }
       res.status(200).json({
         success: true,
-        user,
+        admin,
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
     }
   })
 );
-
-// Logout User
-router.get(
-  '/logout',
-  isAuthenticated,
-  catchAsyncErrors(async (req, res, next) => {
-    try {
-      res.cookie('token', null, {
-        expires: new Date(Date.now()),
-        httpOnly: true,
-      });
-
-      res.status(201).json({
-        success: true,
-        message: 'Logout Successfully!',
-      });
-    } catch (error) {
-      return next(new ErrorHandler(error.message, 500));
-    }
-  })
-);
-
 module.exports = router;

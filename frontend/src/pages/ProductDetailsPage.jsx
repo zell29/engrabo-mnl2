@@ -8,14 +8,13 @@ import SuggestedProduct from '../components/Products/SuggestedProduct';
 
 const ProductDetailsPage = () => {
   const { name } = useParams();
-  console.log(name);
   const [data, setData] = useState(null);
-  const productName = name.replace(/-/g, '');
 
   useEffect(() => {
+    const productName = name.replace(/-/g, '');
     const data = productData.find((i) => i.name === productName);
     setData(data);
-  }, []);
+  }, [name]);
 
   return (
     <div>

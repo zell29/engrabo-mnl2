@@ -151,12 +151,6 @@
   }
 }
 
-@media screen and (max-width: 600px) {
-  .content {
-    width: 80%;
-  }
-}
-
 .content > * {
   color: #fff4d7;
   margin-bottom: 1rem;
@@ -214,5 +208,71 @@ hr {
   }
   100% {
     background-position: 0 0;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .slider {
+    height: 50vh;
+  }
+
+  .slide img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .content {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    padding: 1rem; /* Adjust padding if necessary */
+    box-sizing: border-box;
+    animation: slide-up 1s ease 0.5s forwards;
+  }
+
+  .content h2 {
+    font-size: 2rem;
+  }
+
+  /* If necessary, adjust this keyframe to make sure it doesn't affect the centering */
+  @keyframes slide-up {
+    0% {
+      visibility: visible;
+      transform: translate(-50%, -50%) translateY(6rem); /* Adjust these values as needed */
+    }
+    100% {
+      visibility: visible;
+      transform: translate(-50%, -50%) translateY(0);
+    }
+  }
+
+  .arrow {
+    border: 1px solid #171203;
+    border-radius: 50%;
+    background: transparent;
+    color: #171203;
+    width: 1.5rem;
+    height: 1.5rem;
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+  }
+
+  .arrow:hover {
+    background: #ccb676;
+  }
+
+  .next {
+    right: 1rem;
+    color: #171203;
+  }
+
+  .prev {
+    left: 1rem;
+    color: #171203;
   }
 }

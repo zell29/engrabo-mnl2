@@ -22,6 +22,7 @@ body {
   background: #fff4d7;
   scroll-behavior: smooth;
 }
+
 .text-brown-dark {
   color: #171203;
 }
@@ -44,4 +45,10 @@ select {
   right: -24%;
   top: -9%;
   cursor: pointer;
+}
+
+@media (max-width: 800px) {
+  body {
+    padding-top: 60px; /* Add padding on smaller screens */
+  }
 }

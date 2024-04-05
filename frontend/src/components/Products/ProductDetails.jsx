@@ -29,7 +29,7 @@ const ProductDetails = ({ data }) => {
   };
 
   return (
-    <div className="bg-[#fff4d7]">
+    <div className="bg-[#fff4d7] ">
       {data ? (
         <div className={`${styles.section} w-[90%] md:w-[80%] mx-auto`}>
           <div className="py-5 flex flex-col md:flex-row">

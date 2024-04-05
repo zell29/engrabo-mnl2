@@ -32,5 +32,4 @@ export const userReducer = createReducer(initialState, (builder) => {
       state.loading = false;
       state.error = action.payload;
     });
-  // And so on for the rest of your action cases
 });

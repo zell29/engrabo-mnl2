@@ -24,8 +24,10 @@ if (process.env.NODE_ENV !== 'PRODUCTION') {
 
 // Routes
 const user = require('./controller/user');
+const admin = require('./controller/admin');
 
 app.use('/api/v2/user', user);
+app.use('/api/v2/admin', admin);
 
 // ErrorHandling
 app.use(ErrorHandler);

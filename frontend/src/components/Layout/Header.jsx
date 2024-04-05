@@ -3,8 +3,12 @@ import { Link } from 'react-router-dom';
 import styles from '../../styles/style';
 import EngraboLogo from '../../assets/Logo/engrabo-logo.png';
 import { categoriesData, productData } from '../../static/data';
-import { AiOutlineSearch, AiOutlineShoppingCart } from 'react-icons/ai';
-import { IoIosArrowForward } from 'react-icons/io';
+import {
+  AiOutlineHeart,
+  AiOutlineSearch,
+  AiOutlineShoppingCart,
+} from 'react-icons/ai';
+import { IoIosArrowForward, IoIosMore } from 'react-icons/io';
 import { BiMenuAltLeft } from 'react-icons/bi';
 import { IoIosArrowDown } from 'react-icons/io';
 import DropDown from './DropDown';
@@ -15,6 +19,12 @@ import { useSelector } from 'react-redux';
 import { backend_url } from '../../server';
 import Cart from '../Cart/Cart';
 import Wishlist from '../Wishlist/Wishlist.jsx';
+import { RxCross1 } from 'react-icons/rx';
+import { IoHome } from 'react-icons/io5';
+import { FaQuestionCircle } from 'react-icons/fa';
+import { FaBasketShopping } from 'react-icons/fa6';
+import { BiSolidLike } from 'react-icons/bi';
+import { useLocation } from 'react-router-dom';
 
 const Header = ({ activeHeading }) => {
   const { isAuthenticated, user } = useSelector((state) => state.user);
@@ -24,6 +34,10 @@ const Header = ({ activeHeading }) => {
   const [dropDown, setDropDown] = useState(false);
   const [openCart, setOpenCart] = useState(false);
   const [openWishlist, setOpenWishlist] = useState(false);
+  const location = useLocation();
+
+  // Mobile
+  const [open, setOpen] = useState(false);
 
   // Search Function
   const handleSearchChange = (e) => {
@@ -49,6 +63,7 @@ const Header = ({ activeHeading }) => {
 
   return (
     <>
+      {/* First Header */}
       <div className={`${styles.section}`}>
         <div className="hidden 800px:h-[50px] 800px:my-[20px] 800px:flex items-center justify-between">
           <div>
@@ -56,6 +71,7 @@ const Header = ({ activeHeading }) => {
               <img src={EngraboLogo} alt="Engrabo Logo" />
             </Link>
           </div>
+
           {/* Search Box*/}
           <div className="w-[50%] relative">
             <input
@@ -70,21 +86,21 @@ const Header = ({ activeHeading }) => {
               className="absolute right-2 top-1.5 cursor-pointer"
             />
             {searchData && searchData.length !== 0 ? (
-              <div className="absolute min-h-[30vh] bg-slate-50 shadow-sm-2 z-[9] p-4">
+              <div className="absolute w-full min-h-[30vh] bg-slate-50 shadow-sm z-10 p-4 rounded-md mt-[2px]">
                 {searchData &&
                   searchData.map((i, index) => {
                     const d = i.name;
 
                     const Product_name = d.replace(/\s+/g, '-');
                     return (
-                      <Link to={`/product/${Product_name}`}>
+                      <Link to={`/product/${Product_name} `}>
                         <div className="w-full flex items-start-py-3">
                           <img
                             src={i.image_Url[0].url}
                             alt=""
                             className="w-[40px] h-[40px] mr-[10px]"
                           />
-                          <h1>{i.name}</h1>
+                          <h1 className="text-left w-full">{i.name}</h1>
                         </div>
                       </Link>
                     );
@@ -105,6 +121,7 @@ const Header = ({ activeHeading }) => {
         </div>
       </div>
 
+      {/* Second Header */}
       <div
         className={`${
           active === true ? 'shadow-sm fixed top-0 left-0 z-10' : null
@@ -139,6 +156,7 @@ const Header = ({ activeHeading }) => {
               ) : null}
             </div>
           </div>
+
           {/* Navitems */}
           <div className={`${styles.normalFlex}`}>
             <Navbar active={activeHeading} />
@@ -178,7 +196,7 @@ const Header = ({ activeHeading }) => {
                   <Link to="/profile">
                     <img
                       src={`${backend_url}/${user.avatar.url}`}
-                      className="w-[30px] h-[30px] rounded-full"
+                      className="w-[35px] h-[35px] rounded-full"
                       alt="User Avatar"
                     />
                   </Link>
@@ -200,6 +218,245 @@ const Header = ({ activeHeading }) => {
           </div>
         </div>
       </div>
+
+      {/* Mobile Header */}
+      <div
+        className={`${
+          active === true ? 'shadow-sm fixed top-0 left-0 z-10' : null
+        } w-full h-[60px] fixed bg-[#171203] z-20 top-0 left-0 shadow-sm 800px:hidden`}
+      >
+        <div className="w-full flex items-center justify-between">
+          <div>
+            <Link to="/">
+              <img
+                src={EngraboLogo}
+                alt="Engrabo Logo"
+                className="mt-2 ml-4 cursor-pointer w-[90px] h-[45px]"
+              />
+            </Link>
+          </div>
+          <div>
+            <div className="relative mr-[20px]">
+              <AiOutlineShoppingCart size={30} color="#9c6f18" />
+              <span className="absolute right-0 top-0 rounded-full bg-[#b19b56] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px] leading-tight text-center">
+                0
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Sticky Mobile Footer */}
+      <div className="fixed bottom-0 left-0 w-full bg-[#171203] z-20 flex justify-between items-center h-[60px] shadow-2xl 800px:hidden">
+        <div className="flex justify-around w-full">
+          <div className="flex flex-col items-center justify-center pd-[10px]">
+            <Link to="/">
+              <IoHome
+                size={30}
+                color={location.pathname === '/' ? '#9c6f18' : '#fff4d7'}
+              />
+              <h5
+                className="text-[10px] text-center"
+                style={{
+                  color: location.pathname === '/' ? '#9c6f18' : '#fff4d7',
+                }}
+              >
+                Home
+              </h5>
+            </Link>
+          </div>
+          <div className="flex flex-col items-center justify-center">
+            <Link to="/products">
+              <FaBasketShopping
+                size={30}
+                color={
+                  location.pathname === '/products' ? '#9c6f18' : '#fff4d7'
+                }
+              />
+              <h5
+                className="text-[10px] text-center "
+                style={{
+                  color:
+                    location.pathname === '/products' ? '#9c6f18' : '#fff4d7',
+                }}
+              >
+                Shop
+              </h5>
+            </Link>
+          </div>
+          <div className="flex flex-col items-center justify-center">
+            <Link to="/best-selling">
+              <BiSolidLike
+                size={30}
+                color={
+                  location.pathname === '/best-selling' ? '#9c6f18' : '#fff4d7'
+                }
+                style={{ display: 'block', margin: '0 auto' }}
+              />
+              <h5
+                className="text-[10px] text-center"
+                style={{
+                  color:
+                    location.pathname === '/best-selling'
+                      ? '#9c6f18'
+                      : '#fff4d7',
+                }}
+              >
+                Best Sales
+              </h5>
+            </Link>
+          </div>
+          <div className="flex flex-col items-center justify-center">
+            <Link to="/faq">
+              <FaQuestionCircle
+                size={30}
+                color={location.pathname === '/faq' ? '#9c6f18' : '#fff4d7'}
+              />
+              <h5
+                className="text-[10px] text-center"
+                style={{
+                  color: location.pathname === '/faq' ? '#9c6f18' : '#fff4d7',
+                }}
+              >
+                FAQ
+              </h5>
+            </Link>
+          </div>
+          <div className="flex flex-col items-center justify-center">
+            <IoIosMore
+              size={30}
+              onClick={() => setOpen(true)}
+              color={open ? '#9c6f18' : '#fff4d7'}
+            />
+            <h5
+              className="text-[10px] text-center "
+              style={{
+                color: open ? '#9c6f18' : '#fff4d7',
+              }}
+            >
+              More
+            </h5>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Header Sidebar */}
+      {open && (
+        <div
+          className={`fixed top-0 left-0 w-full bg-[#0000004b] h-screen z-20 `}
+        >
+          <div className="fixed w-[60%] bg-[#fff] h-screen top-0 left-0 z-70 overflow-y-scroll">
+            {/* Wishlist and X Icon */}
+            <div className="w-full justify-between flex pr-3">
+              {/* Wishlist Icon */}
+              <div>
+                <div className="relative mr-[15px]">
+                  <AiOutlineHeart size={30} className="mt-5 ml-3" />
+                  <span className="absolute right-0 top-0 rounded-full bg-[#b19b56] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px] leading-tight text-center">
+                    0
+                  </span>
+                </div>
+              </div>
+
+              {/* Cross Icon */}
+              <RxCross1
+                size={30}
+                className="ml-4 mt-5"
+                onClick={() => setOpen(false)}
+              />
+            </div>
+
+            {/* Search Bar */}
+            <div className="my-8 w-[92%] m-auto h-[40px] relative">
+              <input
+                type="search"
+                placeholder="Search Product..."
+                value={searchTerm}
+                onChange={handleSearchChange}
+                className="h-[40px] w-full px-2 border-[#171203] border-[2px] rounded-md"
+              />
+              {searchData && (
+                <div className="absolute bg-[#fff] z-10 shadow w-full left-0 p-3">
+                  {searchData.map((i) => {
+                    const d = i.name;
+
+                    const Product_name = d.replace(/\s+/g, '-');
+                    return (
+                      <Link to={`/product/${Product_name}`}>
+                        <div className="flex items-center">
+                          <img
+                            src={i.image_Url[0].url}
+                            alt=""
+                            className="w-[50px] mr-2"
+                          />
+                          <h5>{i.name}</h5>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+
+            {/* Logo */}
+            <div className="flex w-full justify-center">
+              <Link to="">
+                <img
+                  src={EngraboLogo}
+                  alt="Engrabo Logo"
+                  className="mt-2 cursor-pointer w-[160px] h-[90px]"
+                />
+              </Link>
+            </div>
+
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+
+            {/* User Profile */}
+            <div className="flex w-full justify-center">
+              {isAuthenticated ? (
+                <Link to="/profile">
+                  <img
+                    src={`${backend_url}/${user.avatar.url}`}
+                    className="w-[60px] h-[60px] rounded-full border-[3px] border-[#171203]"
+                    alt="User Avatar"
+                  />
+                </Link>
+              ) : (
+                <>
+                  <Link
+                    to="/login"
+                    className="text-[18px] pr-[10px] text-[#6b540f] hover:text-[#171203] transition duration-300 ease-in-out"
+                  >
+                    Login /
+                  </Link>
+                  <Link
+                    to="/sign-up"
+                    className="text-[18px] text-[#6b540f] hover:text-[#171203] transition duration-300 ease-in-out"
+                  >
+                    Sign up
+                  </Link>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
