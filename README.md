@@ -48,11 +48,14 @@ Note: Please add comments for everything you do in the code, and give a comments
   ```
     git clone https://github.com/monmongit/engrabo-mnl
   ```
-  you will get all the code inside that link
+  you will get all the code 
+
+  after, create a folder config inside the backend, then inside of the folder create .env file and contanct me for the data of it
+
 - always need to do is go to EngraboMNL Directory, command this:
 
   ```
-    cd engrabo-mnl
+    cd engrabo-mnl //if nandito naman na kayo kahit wag na to
 
     cd other Directory depending on what you are doing
   ```
@@ -67,7 +70,8 @@ Note: Please add comments for everything you do in the code, and give a comments
   ```
 - Then checked if already connected (Frontend)
   ```
-    npm start
+cd frontend    
+npm start
   ```
 - Set up your name and email, command this:
 
