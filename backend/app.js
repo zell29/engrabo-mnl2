@@ -22,12 +22,20 @@ if (process.env.NODE_ENV !== 'PRODUCTION') {
   });
 }
 
-// Routes
+// Controller Routes
 const user = require('./controller/user');
 const admin = require('./controller/admin');
+const product = require('./controller/product');
+const event = require('./controller/event');
+const coupon = require('./controller/couponCode');
+const category = require('./controller/category');
 
 app.use('/api/v2/user', user);
 app.use('/api/v2/admin', admin);
+app.use('/api/v2/product', product);
+app.use('/api/v2/event', event);
+app.use('/api/v2/coupon', coupon);
+app.use('/api/v2/category', category);
 
 // ErrorHandling
 app.use(ErrorHandler);

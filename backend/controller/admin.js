@@ -171,4 +171,25 @@ router.get(
     }
   })
 );
+
+// Logout Admin
+router.get(
+  '/logout',
+  isAdmin,
+  catchAsyncError(async (req, res, next) => {
+    try {
+      res.cookie('admin_token', null, {
+        expires: new Date(Date.now()),
+        httpOnly: true,
+      });
+
+      res.status(201).json({
+        success: true,
+        message: 'Logout Successfully!',
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
 module.exports = router;
