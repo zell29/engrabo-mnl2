@@ -4,11 +4,11 @@ Note: Please add comments for everything you do in the code, and give a comments
 
 ## Reference:
 
-- https://www.youtube.com/watch?v=XxnUSZOgMLY (1hr 48 secs)
-- https://www.youtube.com/watch?v=5ZodHXPAJCQ&list=PLyah27R0n8V4Kcao94Qlt-xJ0bHxZfBjk&index=2
-- https://www.youtube.com/watch?v=LfI7H8zZSpg&list=PLyah27R0n8V4Kcao94Qlt-xJ0bHxZfBjk&index=3
-- https://www.youtube.com/watch?v=x2kwp-_m17I&list=PLyah27R0n8V4Kcao94Qlt-xJ0bHxZfBjk&index=4
-- https://www.youtube.com/watch?v=mOVcdWZXl9o&list=PLyah27R0n8V4Kcao94Qlt-xJ0bHxZfBjk&index=5
+- https://www.youtube.com/watch?v=XxnUSZOgMLY (done)
+- https://www.youtube.com/watch?v=5ZodHXPAJCQ&list=PLyah27R0n8V4Kcao94Qlt-xJ0bHxZfBjk&index=2 (done) 
+- https://www.youtube.com/watch?v=LfI7H8zZSpg&list=PLyah27R0n8V4Kcao94Qlt-xJ0bHxZfBjk&index=3 (done)
+- https://www.youtube.com/watch?v=x2kwp-_m17I&list=PLyah27R0n8V4Kcao94Qlt-xJ0bHxZfBjk&index=4 
+- https://www.youtube.com/watch?v=mOVcdWZXl9o&list=PLyah27R0n8V4Kcao94Qlt-xJ0bHxZfBjk&index=5 
 - https://www.youtube.com/watch?v=GMhPQApoFX4&list=PLyah27R0n8V4Kcao94Qlt-xJ0bHxZfBjk&index=6
 - https://www.youtube.com/watch?v=IC00WCJl4j4&list=PLyah27R0n8V4Kcao94Qlt-xJ0bHxZfBjk&index=7
 
@@ -48,11 +48,14 @@ Note: Please add comments for everything you do in the code, and give a comments
   ```
     git clone https://github.com/monmongit/engrabo-mnl
   ```
-  you will get all the code inside that link
+  you will get all the code 
+
+  after, create a folder config inside the backend, then inside of the folder create .env file and contanct me for the data of it
+
 - always need to do is go to EngraboMNL Directory, command this:
 
   ```
-    cd engrabo-mnl
+    cd engrabo-mnl //if nandito naman na kayo kahit wag na to
 
     cd other Directory depending on what you are doing
   ```
@@ -67,7 +70,8 @@ Note: Please add comments for everything you do in the code, and give a comments
   ```
 - Then checked if already connected (Frontend)
   ```
-    npm start
+cd frontend    
+npm start
   ```
 - Set up your name and email, command this:
 
