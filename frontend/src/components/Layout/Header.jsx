@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from '../../styles/style';
 import EngraboLogo from '../../assets/Logo/engrabo-logo.png';
-import { categoriesData, productData } from '../../static/data';
+import { categoriesData } from '../../static/data';
 import {
   AiOutlineHeart,
   AiOutlineSearch,
@@ -28,6 +28,7 @@ import { useLocation } from 'react-router-dom';
 
 const Header = ({ activeHeading }) => {
   const { isAuthenticated, user } = useSelector((state) => state.user);
+  const { allProducts } = useSelector((state) => state.products);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchData, setSearchData] = useState(null);
   const [active, setActive] = useState(false);
@@ -44,12 +45,16 @@ const Header = ({ activeHeading }) => {
     const term = e.target.value;
     setSearchTerm(term);
 
-    const filteredProducts =
-      productData &&
-      productData.filter((product) =>
-        product.name.toLowerCase().includes(term.toLowerCase())
-      );
-    setSearchData(filteredProducts);
+    if (term.length > 0) {
+      const filteredProducts =
+        allProducts &&
+        allProducts.filter((product) =>
+          product.name.toLowerCase().includes(term.toLowerCase())
+        );
+      setSearchData(filteredProducts);
+    } else {
+      setSearchData([]);
+    }
   };
 
   // Sticky Header
@@ -67,7 +72,7 @@ const Header = ({ activeHeading }) => {
       <div className={`${styles.section}`}>
         <div className="hidden 800px:h-[50px] 800px:my-[20px] 800px:flex items-center justify-between">
           <div>
-            <Link to="">
+            <Link to="/">
               <img src={EngraboLogo} alt="Engrabo Logo" />
             </Link>
           </div>
@@ -86,7 +91,7 @@ const Header = ({ activeHeading }) => {
               className="absolute right-2 top-1.5 cursor-pointer"
             />
             {searchData && searchData.length !== 0 ? (
-              <div className="absolute w-full min-h-[30vh] bg-slate-50 shadow-sm z-10 p-4 rounded-md mt-[2px]">
+              <div className="absolute w-full  bg-slate-50 shadow-sm z-10 p-4 rounded-md mt-[2px]">
                 {searchData &&
                   searchData.map((i, index) => {
                     const d = i.name;
@@ -94,9 +99,9 @@ const Header = ({ activeHeading }) => {
                     const Product_name = d.replace(/\s+/g, '-');
                     return (
                       <Link to={`/product/${Product_name} `}>
-                        <div className="w-full flex items-start-py-3">
+                        <div className="w-full flex items-start-py-3 pb-2">
                           <img
-                            src={i.image_Url[0].url}
+                            src={`${backend_url}/${i.images[0]}`}
                             alt=""
                             className="w-[40px] h-[40px] mr-[10px]"
                           />
@@ -109,6 +114,7 @@ const Header = ({ activeHeading }) => {
             ) : null}
           </div>
 
+          {/* Best Offer */}
           <div
             className={`${styles.button} hover:opacity-95 transition duration-300 ease-in-out`}
           >
@@ -162,7 +168,7 @@ const Header = ({ activeHeading }) => {
             <Navbar active={activeHeading} />
           </div>
 
-          {/* User Wishlist */}
+          {/* Profile and others */}
           <div className="flex">
             <div className={`${styles.normalFlex}`}>
               <div
@@ -343,9 +349,9 @@ const Header = ({ activeHeading }) => {
       {/* Mobile Header Sidebar */}
       {open && (
         <div
-          className={`fixed top-0 left-0 w-full bg-[#0000004b] h-screen z-20 `}
+          className={`fixed top-0 left-0 w-full bg-[#0000004b] h-screen z-20 800px:hidden flex`}
         >
-          <div className="fixed w-[60%] bg-[#fff] h-screen top-0 left-0 z-70 overflow-y-scroll">
+          <div className="fixed w-[60%] bg-[#fff] h-screen top-0 left-0 z-70 overflow-y-scroll hide-scrollbar">
             {/* Wishlist and X Icon */}
             <div className="w-full justify-between flex pr-3">
               {/* Wishlist Icon */}
@@ -376,20 +382,20 @@ const Header = ({ activeHeading }) => {
                 className="h-[40px] w-full px-2 border-[#171203] border-[2px] rounded-md"
               />
               {searchData && (
-                <div className="absolute bg-[#fff] z-10 shadow w-full left-0 p-3">
+                <div className="absolute bg-[#fff] z-10 shadow w-full left-0 ">
                   {searchData.map((i) => {
                     const d = i.name;
 
                     const Product_name = d.replace(/\s+/g, '-');
                     return (
                       <Link to={`/product/${Product_name}`}>
-                        <div className="flex items-center">
+                        <div className="w-full flex items-start-py-3 pt-1 pb-1">
                           <img
-                            src={i.image_Url[0].url}
+                            src={`${backend_url}/${i.images[0]}`}
                             alt=""
-                            className="w-[50px] mr-2"
+                            className="w-[40px] h-[40px] mr-[10px]"
                           />
-                          <h5>{i.name}</h5>
+                          <h1 className="text-left w-full">{i.name}</h1>
                         </div>
                       </Link>
                     );

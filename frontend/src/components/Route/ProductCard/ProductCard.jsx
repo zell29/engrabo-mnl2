@@ -10,6 +10,8 @@ import {
 import { Link } from 'react-router-dom';
 import styles from '../../../styles/style';
 import ProductDetailsCard from '../ProductDetailsCard/ProductDetailsCard';
+import { backend_url } from '../../../server';
+import { FaRegEdit } from 'react-icons/fa';
 
 const ProductCard = ({ data }) => {
   const [click, setClick] = useState(false);
@@ -20,31 +22,31 @@ const ProductCard = ({ data }) => {
 
   return (
     <>
-      <div className="w-full h-[370px] bg-white rounded-lg shadow-sm p-3 relative cursor-pointer">
-        <div className="flex justify-end"></div>
-
+      <div className="800px:w-full w-[300px] h-[370px]  bg-white rounded-lg shadow-sm p-3 relative cursor-pointer">
         {/* Image of Product */}
         <Link to={`/product/${product_name}`}>
           <img
-            src={data.image_Url[0].url}
-            alt=""
+            src={`${backend_url}/${data.images && data.images[0]}`}
+            alt={data.name}
             className="w-full h-[170px] object-contain"
           />
         </Link>
 
-        {/* Shop Name of Product */}
-        {/* <Link to="/">
-          <h5 className="text-[#b19b56]">{data.shop.name}</h5>
-        </Link> */}
-
         <Link to={`/product/${product_name}`}>
           {/* Name of Product */}
-          <h4 className="pt-6 pb-3 font-[500] text-[#171203]">
+          <h4 className="pb-1 pt-4 font-[500]">
             {data.name.length > 40 ? data.name.slice(0, 40) + '...' : data.name}
           </h4>
 
+          {/* Product Description */}
+          <p className="text-justify pt-1 pb-2 text-[#534723]">
+            {data.description.length > 40
+              ? data.description.slice(0, 40) + '...'
+              : data.description}
+          </p>
+
           {/* Rating of Product */}
-          <div className="flex">
+          <div className="flex pb-2 pt-1">
             <AiFillStar
               className="mr-2 cursor-pointer"
               size={20}
@@ -76,17 +78,20 @@ const ProductCard = ({ data }) => {
           <div className="py-2 flex items-center justify-between">
             {/* Price of Product */}
             <div className="flex">
-              <h5 className={`${styles.productDiscountPrice} text-[#171203]`}>
-                ₱ {data.price === 0 ? data.price : data.discount_price}
+              <h5 className={`${styles.productDiscountPrice}`}>
+                ₱{' '}
+                {data.discountPrice === 0
+                  ? data.discountPrice
+                  : data.originalPrice}
               </h5>
               <h4 className={`${styles.price}`}>
-                {data.price ? '₱ ' + data.price : null}
+                {data.discountPrice ? '₱ ' + data.discountPrice : null}
               </h4>
             </div>
 
             {/* Sold of Product */}
             <span className="font-[400] text-[17px] text-[#b19b56]">
-              {data.total_sell} sold
+              {data?.sold_out} sold
             </span>
           </div>
         </Link>
@@ -123,6 +128,13 @@ const ProductCard = ({ data }) => {
             onClick={() => setOpen(!open)}
             color="#171203"
             title="Add to Cart"
+          />
+          <FaRegEdit
+            size={23}
+            className="cursor-pointer absolute right-2 top-36"
+            onClick={() => setOpen(!open)}
+            color="#171203"
+            title="Edit Product"
           />
           {open ? <ProductDetailsCard setOpen={setOpen} data={data} /> : null}
         </div>

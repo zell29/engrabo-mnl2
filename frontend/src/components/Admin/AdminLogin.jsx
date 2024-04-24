@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import { AiOutlineEyeInvisible, AiOutlineEye } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
 import styles from '../../styles/style';
@@ -10,7 +12,7 @@ import { toast } from 'react-toastify';
 import '../../styles/toastDesign.css';
 
 const AdminLogin = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [visible, setVisible] = useState('');
@@ -29,7 +31,7 @@ const AdminLogin = () => {
       )
       .then((res) => {
         toast.success('Login Success!');
-        // navigate('/');
+        navigate('/dashboard');
         window.location.reload(true);
       })
       .catch((err) => {

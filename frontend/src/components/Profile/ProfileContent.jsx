@@ -135,7 +135,7 @@ const ProfileContent = ({ active }) => {
                 type="submit"
                 value="Update"
                 required
-                className={`w-[250px] text-center text-[#171203] border border-[#171203] mt-4 !rounded-[4px] !h-11 hover:bg-[#ded7c3] transition duration-300 ease-in-out`}
+                className={`w-[250px] text-center text-[#171203] border border-[#171203] mt-4 !rounded-[4px] !h-11 hover:bg-[#f9f1dc] transition duration-300 ease-in-out`}
               />
             </form>
           </div>
