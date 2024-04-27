@@ -10,32 +10,81 @@ import {
 import { backend_url } from '../../server';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllProductsAdmin } from '../../redux/action/product';
+import { addToWishlist, removeFromWishlist } from '../../redux/action/wishlist';
+import { toast } from 'react-toastify';
+import { addTocart } from '../../redux/action/cart';
 
 const ProductDetails = ({ data }) => {
+  const { wishlist } = useSelector((state) => state.wishlist);
+  const { cart } = useSelector((state) => state.cart);
+
   const [count, setCount] = useState(1);
   const [click, setClick] = useState(false);
   const [select, setSelect] = useState(0);
   const navigate = useNavigate();
 
   const { products } = useSelector((state) => state.products);
-  console.log(products);
+
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(getAllProductsAdmin(data && data.admin._id));
-  }, [dispatch, data]);
+    if (wishlist && wishlist.find((i) => i._id === data._id)) {
+      setClick(true);
+    } else {
+      setClick(false);
+    }
+  }, [dispatch, data, wishlist]);
 
   const incrementCount = () => {
+    if (data.stock <= count) {
+      toast.error(
+        `${data.name} stock is limited! Please contact us to reserve your order!`
+      );
+      return;
+    }
     setCount(count + 1);
   };
 
   const decrementCount = () => {
-    if (count > 1) {
-      setCount(count - 1);
+    if (count <= 1) {
+      toast.error('You cannot order less than 1 item.');
+      return;
     }
+    setCount(count - 1);
   };
 
   const handleMessageSubmit = () => {
     navigate('/inbox?conversation=55512ee');
+  };
+
+  const removeFromWishlistHandler = (data) => {
+    setClick(!click);
+    dispatch(removeFromWishlist(data));
+    toast.error(`${data.name} removed to wishlist successfully!`);
+  };
+
+  const addToWishlistHandler = (data) => {
+    setClick(!click);
+    dispatch(addToWishlist(data));
+    toast.success(`${data.name} added to wishlist successfully!`);
+  };
+
+  const addToCartHandler = (id) => {
+    const isItemExists = cart && cart.find((i) => i._id === id);
+    if (isItemExists) {
+      toast.error(`${data.name} already in a cart!`);
+    } else {
+      if (data.stock < 1) {
+        toast.error(
+          `${data.name} stock is limited! Please contact us to reserve your order!`
+        );
+      } else {
+        const cartData = { ...data, qty: count };
+        dispatch(addTocart(cartData));
+        toast.success(`${data.name} added to cart successfully!`);
+      }
+    }
   };
 
   return (
@@ -77,13 +126,31 @@ const ProductDetails = ({ data }) => {
               {/* Image of Product Description */}
               <h1 className={`${styles.productTitle}`}>{data.name}</h1>
               <p className="text-justify text-[#534723]">{data.description}</p>
+
+              <div className="py-2 flex items-center justify-between">
+                {/* Price of Product */}
+                <div className="flex">
+                  <h5 className={`${styles.productDiscountPrice}`}>
+                    ₱{' '}
+                    {data.discountPrice === 0
+                      ? data.discountPrice
+                      : data.originalPrice}
+                  </h5>
+                  <h4 className={`${styles.price}`}>
+                    {data.discountPrice ? '₱ ' + data.discountPrice : null}
+                  </h4>
+                </div>
+
+                {/* Sold of Product */}
+                <span className="font-[400] text-[17px] text-[#b19b56]">
+                  {data?.sold_out} sold
+                </span>
+              </div>
               <div className="flex pt-3">
-                <h4 className={`${styles.productDiscountPrice}`}>
-                  ₱ {data.originalPrice}
+                {/* Products Stock */}
+                <h4 className="font-[400] text-[#534723] font-Roboto">
+                  Stocks: {data.stock}
                 </h4>
-                <h3 className={`${styles.price}`}>
-                  {data.discountPrice ? '₱' + data.discountPrice : null}
-                </h3>
               </div>
 
               <div className="flex items-center mt-12 justify-between pr-3">
@@ -112,7 +179,7 @@ const ProductDetails = ({ data }) => {
                     <AiFillHeart
                       size={30}
                       className="cursor-pointer"
-                      onClick={() => setClick(!click)}
+                      onClick={() => removeFromWishlistHandler(data)}
                       color={click ? '#171203' : '#171203'}
                       title="Removed from Wishlist"
                     />
@@ -120,7 +187,7 @@ const ProductDetails = ({ data }) => {
                     <AiOutlineHeart
                       size={30}
                       className="cursor-pointer"
-                      onClick={() => setClick(!click)}
+                      onClick={() => addToWishlistHandler(data)}
                       color={click ? '#171203' : '#171203'}
                       title="Added to Wishlist"
                     />
@@ -131,6 +198,7 @@ const ProductDetails = ({ data }) => {
               {/* Cart Button */}
               <div
                 className={`${styles.button} mt-6 !rounded-[4px] !h-11 flex items-center hover:opacity-95 transition duration-300 ease-in-out`}
+                onClick={() => addToCartHandler(data._id)}
               >
                 <span className="text-[#fff4d7] flex items-center">
                   Add to Cart <AiOutlineShoppingCart className="ml-1" />

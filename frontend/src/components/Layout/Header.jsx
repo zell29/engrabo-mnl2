@@ -28,6 +28,9 @@ import { useLocation } from 'react-router-dom';
 
 const Header = ({ activeHeading }) => {
   const { isAuthenticated, user } = useSelector((state) => state.user);
+  const { cart } = useSelector((state) => state.cart);
+  const { wishlist } = useSelector((state) => state.wishlist);
+
   const { allProducts } = useSelector((state) => state.products);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchData, setSearchData] = useState(null);
@@ -94,11 +97,8 @@ const Header = ({ activeHeading }) => {
               <div className="absolute w-full  bg-slate-50 shadow-sm z-10 p-4 rounded-md mt-[2px]">
                 {searchData &&
                   searchData.map((i, index) => {
-                    const d = i.name;
-
-                    const Product_name = d.replace(/\s+/g, '-');
                     return (
-                      <Link to={`/product/${Product_name} `}>
+                      <Link to={`/product/${i._id} `}>
                         <div className="w-full flex items-start-py-3 pb-2">
                           <img
                             src={`${backend_url}/${i.images[0]}`}
@@ -177,7 +177,7 @@ const Header = ({ activeHeading }) => {
               >
                 <GoHeart size={30} color="#fff4d7" />
                 <span className="absolute right-0 top-0 rounded-full bg-[#b19b56] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px] leading-tight text-center">
-                  0
+                  {wishlist && wishlist.length}
                 </span>
               </div>
             </div>
@@ -190,7 +190,7 @@ const Header = ({ activeHeading }) => {
               >
                 <AiOutlineShoppingCart size={30} color="#fff4d7" />
                 <span className="absolute right-0 top-0 rounded-full bg-[#b19b56] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px] leading-tight text-center">
-                  0
+                  {cart && cart.length}
                 </span>
               </div>
             </div>
@@ -245,7 +245,7 @@ const Header = ({ activeHeading }) => {
             <div className="relative mr-[20px]">
               <AiOutlineShoppingCart size={30} color="#9c6f18" />
               <span className="absolute right-0 top-0 rounded-full bg-[#b19b56] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px] leading-tight text-center">
-                0
+                {cart && cart.length}
               </span>
             </div>
           </div>
