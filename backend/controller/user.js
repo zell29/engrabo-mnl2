@@ -10,6 +10,7 @@ const jwt = require('jsonwebtoken');
 const sendMail = require('../utils/sendMail'); // Ensure this path is correct
 const sendToken = require('../utils/jwtToken');
 const { isAuthenticated } = require('../middleware/auth');
+const catchAsyncError = require('../middleware/catchAsyncError');
 
 router.post('/create-user', upload.single('file'), async (req, res, next) => {
   try {
@@ -178,6 +179,147 @@ router.get(
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
+// Update user info
+router.put(
+  '/update-user-info',
+  isAuthenticated,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const { email, password, phoneNumber, name } = req.body;
+
+      const user = await User.findOne({ email }).select('+password');
+
+      if (!user) {
+        return next(new ErrorHandler('User not found', 400));
+      }
+
+      const isPasswordValid = await user.comparePassword(password);
+
+      if (!isPasswordValid) {
+        return next(
+          new ErrorHandler('Please provide the correct information', 400)
+        );
+      }
+
+      user.name = name;
+      user.email = email;
+      user.phoneNumber = phoneNumber;
+
+      await user.save();
+
+      res.status(201).json({
+        success: true,
+        user,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
+// Update user avatar
+router.put(
+  '/update-avatar',
+  isAuthenticated,
+  upload.single('image'),
+  async (req, res, next) => {
+    try {
+      const user = await User.findById(req.user.id);
+      if (!user) {
+        return next(new ErrorHandler('User not found', 404));
+      }
+
+      // Delete the existing avatar file if it exists
+      if (user.avatar && user.avatar.url) {
+        const existAvatarPath = path.join('uploads', user.avatar.url);
+        if (fs.existsSync(existAvatarPath)) {
+          fs.unlinkSync(existAvatarPath);
+        } else {
+          console.log('Previous avatar file not found:', existAvatarPath);
+        }
+      }
+
+      const fileUrl = req.file ? req.file.filename : user.avatar.url; // Fallback to existing if no file provided
+
+      // Update user document
+      user.avatar = { public_id: req.file.filename, url: fileUrl };
+      await user.save();
+
+      res
+        .status(200)
+        .json({ success: true, message: 'Avatar updated', user: user });
+    } catch (error) {
+      console.error('Failed to update avatar:', error);
+      return next(new ErrorHandler('Failed to update avatar', 500));
+    }
+  }
+);
+
+// Update user addresses
+router.put(
+  '/update-user-addresses',
+  isAuthenticated,
+  catchAsyncError(async (req, res, next) => {
+    try {
+      const user = await User.findById(req.user.id);
+
+      const sameTypeAddress = user.addresses.find(
+        (address) => address.addressType === req.body.addressType
+      );
+
+      if (sameTypeAddress) {
+        return next(
+          new ErrorHandler(`${req.body.addressType} address already exists!`)
+        );
+      }
+
+      const existsAddress = user.addresses.find(
+        (address) => address._id === req.body._id
+      );
+
+      if (existsAddress) {
+        Object.assign(existsAddress, req.body);
+      } else {
+        // Add new address to array
+        user.addresses.push(req.body);
+      }
+
+      await user.save();
+
+      res.status(200).json({
+        success: true,
+        user,
+      });
+    } catch (error) {
+      return next(new ErrorHandler('Failed to update avatar', 500));
+    }
+  })
+);
+
+// Delete user address
+router.delete(
+  '/delete-user-address/:id',
+  isAuthenticated,
+  catchAsyncError(async (req, res, next) => {
+    try {
+      const userId = req.user._id;
+      const addressId = req.params.id;
+      await User.updateOne(
+        {
+          _id: userId,
+        },
+        { $pull: { addresses: { _id: addressId } } }
+      );
+
+      const user = await User.findById(userId);
+
+      res.status(200).json({ success: true, user });
+    } catch (error) {
+      return next(new ErrorHandler('Failed to update address', 500));
     }
   })
 );

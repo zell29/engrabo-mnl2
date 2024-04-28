@@ -107,7 +107,7 @@ const CartSingle = ({ data, removeFromWishlistHandler, addToCartHandler }) => {
         />
 
         {/* Price and Details of Product */}
-        <div className="pl-[10px] mr-[60px] ">
+        <div className="pl-[10px] w-[50%] ">
           <h1 className="text-[17px]">
             {data.name.length > 15 ? data.name.slice(0, 15) + '...' : data.name}
           </h1>
