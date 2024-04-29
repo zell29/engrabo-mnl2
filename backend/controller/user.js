@@ -254,7 +254,7 @@ router.put(
         .json({ success: true, message: 'Avatar updated', user: user });
     } catch (error) {
       console.error('Failed to update avatar:', error);
-      return next(new ErrorHandler('Failed to update avatar', 500));
+      return next(new ErrorHandler(error.message, 500));
     }
   }
 );
@@ -295,7 +295,7 @@ router.put(
         user,
       });
     } catch (error) {
-      return next(new ErrorHandler('Failed to update avatar', 500));
+      return next(new ErrorHandler(error.message, 500));
     }
   })
 );
@@ -319,7 +319,41 @@ router.delete(
 
       res.status(200).json({ success: true, user });
     } catch (error) {
-      return next(new ErrorHandler('Failed to update address', 500));
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
+// Update user password
+router.put(
+  '/update-user-password',
+  isAuthenticated,
+  catchAsyncError(async (req, res, next) => {
+    try {
+      const user = await User.findById(req.user.id).select('+password');
+
+      const isPasswordMatched = await user.comparePassword(
+        req.body.oldPassword
+      );
+
+      if (!isPasswordMatched) {
+        return next(new ErrorHandler('Current password is incorrect!', 400));
+      }
+
+      if (req.body.newPassword !== req.body.confirmPassword) {
+        return next(new ErrorHandler('New password does not matched!', 400));
+      }
+
+      user.password = req.body.newPassword;
+
+      await user.save();
+
+      res.status(200).json({
+        success: true,
+        message: 'Password updated successfully!',
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
     }
   })
 );

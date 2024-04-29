@@ -103,7 +103,7 @@ const ProfileContent = ({ active }) => {
             <form
               onSubmit={handleSubmit}
               required
-              className="flex flex-col items-center justify-center sm:px-5 px-2"
+              className="flex flex-col items-center justify-center sm:px-5 px-2 sm:pb-0 pb-[60px]"
             >
               {/* Fullname and Email Addresss */}
               <div className="w-full 800px:flex block pb-3">
@@ -192,10 +192,10 @@ const ProfileContent = ({ active }) => {
         </div>
       )}
 
-      {/* Payment Method Content */}
+      {/* ChangePassword Content */}
       {active === 6 && (
         <div className="">
-          <PaymentMethod />
+          <ChangePassword />
         </div>
       )}
 
@@ -478,36 +478,85 @@ const TrackOrder = () => {
   );
 };
 
-// Payment Method
-const PaymentMethod = () => {
+// Change Password
+const ChangePassword = () => {
+  const [oldPassword, setOldPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+  const passwordChangeHandler = async (e) => {
+    e.preventDefault(); // This stops the form from submitting traditionally, which refreshes the page
+
+    try {
+      const response = await axios.put(
+        `${server}/user/update-user-password`,
+        { oldPassword, newPassword, confirmPassword },
+        { withCredentials: true }
+      );
+      toast.success(response.data.message);
+      setOldPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
   return (
-    <div className="w-full px-5">
-      <div className="flex w-full items-center justify-between">
-        <h1 className="text-[25px] font-[600] text-[#171203] pb-2">
-          Payment Methods
-        </h1>
-        <div
-          className={`${styles.button}  mt-4 !rounded-[4px] !h-11 hover:opacity-95 transition duration-300 ease-in-out`}
+    <div className="w-full px-5 800px:pt-0 pt-[60px]">
+      <h1 className="text-[25px] text-center font-[600] text-[#171203] pb-2">
+        Change Password
+      </h1>
+      <div className="w-full">
+        <form
+          onSubmit={passwordChangeHandler}
+          className="flex flex-col items-center "
         >
-          <span className="text-[#fff4d7]">Add New</span>
-        </div>
-      </div>
-      <br />
-      <div className="w-full bg-[#f7ebca] h-[70px] rounded-[4px] flex items-center px-3 shadow justify-between pr-10">
-        <div className="flex items-center">
-          <img
-            src="https://bonik-react.vercel.app/assets/images/payment-methods/Visa.svg"
-            alt=""
-          />
-          <h5 className="pl-5 font-[600]">Card Name</h5>
-        </div>
-        <div className="pl-8 flex items-center">
-          <h6>63+ **** *** ****</h6>
-          <h5 className="pl-6"> expired Date </h5>
-        </div>
-        <div className="min-w-[10%] flex items-center justify-between pl-8">
-          <AiOutlineDelete size={25} className="cursor-pointer" />
-        </div>
+          {/* Old Password */}
+          <div className="w-[100%] 800px:w-[50%] mt-5">
+            <label className="block pb-2 text-[#171203]">
+              Current Password
+            </label>
+            <input
+              type="password"
+              className="mt-2 appearance-none block w-full px-3 h-[35px] border border-[#9e8a4f] rounded-[3px] shadow-sm placeholder-[#9e8a4f] focus:outline-none focus:ring-brown-dark focus:border-brown-dark"
+              required
+              value={oldPassword}
+              onChange={(e) => setOldPassword(e.target.value)}
+            />
+          </div>
+
+          {/* New Password */}
+          <div className="w-[100%] 800px:w-[50%] mt-2">
+            <label className="block pb-2 text-[#171203]">New Password</label>
+            <input
+              type="password"
+              className="mt-2 appearance-none block w-full px-3 h-[35px] border border-[#9e8a4f] rounded-[3px] shadow-sm placeholder-[#9e8a4f] focus:outline-none focus:ring-brown-dark focus:border-brown-dark"
+              required
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+          </div>
+
+          {/* Confirm New Password */}
+          <div className="w-[100%] 800px:w-[50%] mt-2">
+            <label className="block pb-2 text-[#171203]">
+              Confirm New Password
+            </label>
+            <input
+              type="password"
+              className="mt-2 appearance-none block w-full px-3 h-[35px] border border-[#9e8a4f] rounded-[3px] shadow-sm placeholder-[#9e8a4f] focus:outline-none focus:ring-brown-dark focus:border-brown-dark"
+              required
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+            <input
+              type="submit"
+              value="Update"
+              required
+              className={`w-full text-center text-[#171203] border border-[#171203] mt-5 !rounded-[4px] !h-11 hover:bg-[#e8d5a9] transition duration-300 ease-in-out`}
+            />
+          </div>
+        </form>
       </div>
     </div>
   );
