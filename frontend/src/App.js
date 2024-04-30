@@ -10,6 +10,9 @@ import {
   BestSellingPage,
   EventsPage,
   FAQPage,
+  CheckoutPage,
+  PaymentPage,
+  OrderSuccessPage,
   ProductDetailsPage,
   ProfilePage,
   AdminCreatePage,
@@ -31,7 +34,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import Store from './redux/store.js';
 import { loadAdmin, loadUser } from './redux/action/user';
 import ProtectedRoute from './routes/ProductedRoute';
-import CheckoutPage from './pages/CheckoutPage';
 // import { AdminHomePage } from './AdminRoutes';
 import AdminProtectedRoute from './routes/AdminProtectedRoute';
 import { getAllProducts } from './redux/action/product.js';
@@ -72,6 +74,9 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+        <Route path="/payment" element={<PaymentPage />} />
+        <Route path="/order/success" element={<OrderSuccessPage />} />
+
         <Route
           path="/profile"
           element={

@@ -11,6 +11,9 @@ import ProfilePage from '../pages/ProfilePage';
 import AdminCreatePage from '../pages/AdminCreatePage';
 import AdminActivationPage from '../pages/AdminActivationPage';
 import AdminLoginPage from '../pages/AdminLoginPage';
+import CheckoutPage from '../pages/CheckoutPage';
+import PaymentPage from '../pages/PaymentPage.jsx';
+import OrderSuccessPage from '../pages/OrderSuccessPage.jsx';
 export {
   LoginPage,
   SignupPage,
@@ -20,6 +23,9 @@ export {
   BestSellingPage,
   EventsPage,
   FAQPage,
+  CheckoutPage,
+  PaymentPage,
+  OrderSuccessPage,
   ProductDetailsPage,
   ProfilePage,
   AdminCreatePage,

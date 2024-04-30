@@ -203,7 +203,7 @@ const AllCoupons = () => {
             >
               <span className="text-white flex items-center justify-center">
                 <VscNewFile size={20} className="mr-2" />
-                Create Product
+                Create Coupon
               </span>
             </div>
           </div>

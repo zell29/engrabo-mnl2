@@ -18,7 +18,10 @@ const Cart = ({ setOpenCart }) => {
   };
 
   const totalPrice = cart.reduce(
-    (acc, item) => acc + item.qty * item.originalPrice,
+    (acc, item) =>
+      acc +
+      item.qty *
+        (item.discountPrice > 0 ? item.discountPrice : item.originalPrice),
     0
   );
 
@@ -94,7 +97,9 @@ const Cart = ({ setOpenCart }) => {
 
 const CartSingle = ({ data, quantityChangeHandler, removeFromCartHandler }) => {
   const [value, setValue] = useState(data.qty);
-  const totalPrice = data.originalPrice * value;
+  const itemPrice =
+    data.discountPrice > 0 ? data.discountPrice : data.originalPrice;
+  const totalPrice = itemPrice * value;
 
   const increment = (data) => {
     if (data.stock <= value) {
@@ -146,13 +151,15 @@ const CartSingle = ({ data, quantityChangeHandler, removeFromCartHandler }) => {
             {data.name.length > 15 ? data.name.slice(0, 15) + '...' : data.name}
           </h1>
           <h4 className="font-[600] text-[17px] text-[#171203]">
-            ₱ {data.originalPrice}
+            {data.discountPrice > 0
+              ? `₱ ${data.discountPrice}`
+              : `₱ ${data.originalPrice}`}
           </h4>
           <h4 className="font-[400] text-[14px] pt-[3px] text-[#534723] font-Roboto">
             Stocks: {data.stock}
           </h4>
           <h4 className="font-[400] text-[14px] pt-[3px] text-[#534723] font-Roboto">
-            Total: ₱ {totalPrice}
+            Total: ₱ {totalPrice.toFixed(2)}
           </h4>
         </div>
         <RxCross1

@@ -237,7 +237,7 @@ const CreateProduct = ({ setOpen }) => {
             <input
               type="submit"
               value="Create"
-              className="mt-2 appearance-none block w-full px-3 h-[35px]  border border-[#9e8a4f] rounded-[3px] shadow-sm placeholder-[#9e8a4f] focus:outline-none focus:ring-brown-dark focus:border-brown-dark hover:bg-[#f9f1dc] transition duration-300 ease-in-out"
+              className=" appearance-none block w-full px-3 h-[35px]  border border-[#171203] text-center text-[#171203] rounded-[3px] mt-8 cursor-pointer"
             />
           </div>
         </div>

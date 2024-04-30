@@ -132,13 +132,15 @@ const ProductDetails = ({ data }) => {
                 <div className="flex">
                   <h5 className={`${styles.productDiscountPrice}`}>
                     ₱{' '}
-                    {data.discountPrice === 0
+                    {data.discountPrice > 0
                       ? data.discountPrice
                       : data.originalPrice}
                   </h5>
-                  <h4 className={`${styles.price}`}>
-                    {data.discountPrice ? '₱ ' + data.discountPrice : null}
-                  </h4>
+                  {data.discountPrice > 0 && (
+                    <h4 className={`${styles.price}`}>
+                      ₱ {data.originalPrice}
+                    </h4>
+                  )}
                 </div>
 
                 {/* Sold of Product */}

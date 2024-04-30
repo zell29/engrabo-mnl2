@@ -2,13 +2,37 @@ import React from 'react';
 import styles from '../../../styles/style';
 import CountDown from './CountDown';
 import { backend_url } from '../../../server';
+import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { useDispatch, useSelector } from 'react-redux';
+import { addTocart } from '../../../redux/action/cart';
 
 const EventCard = ({ data }) => {
+  const { cart } = useSelector((state) => state.cart);
+  const dispatch = useDispatch();
+
   // Add a guard clause to check if data is available
   if (!data || !data.images || data.images.length === 0) {
     console.log('Data or images not provided or empty in EventCard');
     return <div>Loading event data...</div>; // Render a fallback or a loading indicator
   }
+
+  const addToCartHandler = (id) => {
+    const isItemExists = cart && cart.find((i) => i._id === data._id);
+    if (isItemExists) {
+      toast.error(`${data.name} already in a cart!`);
+    } else {
+      if (data.stock < 1) {
+        toast.error(
+          `${data.name} stock is limited! Please contact us to reserve your order!`
+        );
+      } else {
+        const cartData = { ...data, qty: 1 };
+        dispatch(addTocart(cartData));
+        toast.success(`${data.name} added to cart successfully!`);
+      }
+    }
+  };
 
   return (
     <div
@@ -42,6 +66,18 @@ const EventCard = ({ data }) => {
           </span>
         </div>
         <CountDown data={data} />
+        <br />
+        <div className="flex items-center">
+          <Link to={`/product/${data._id}?isEvent=true`}>
+            <div className={`${styles.button} text-[white]`}>See Details</div>
+          </Link>
+          <div
+            className={`${styles.button} text-[white] ml-5`}
+            onClick={(e) => addToCartHandler(data)}
+          >
+            Add to cart
+          </div>
+        </div>
       </div>
     </div>
   );

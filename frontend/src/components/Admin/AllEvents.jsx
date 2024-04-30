@@ -52,6 +52,12 @@ const AllEvents = () => {
       flex: 0.6,
     },
     {
+      field: 'discount',
+      headerName: 'Discounted price',
+      minWidth: 100,
+      flex: 0.6,
+    },
+    {
       field: 'stock',
       headerName: 'Stock',
       minWidth: 80,
@@ -97,6 +103,7 @@ const AllEvents = () => {
     id: item._id,
     name: item.name,
     price: '₱ ' + item.originalPrice,
+    discount: '₱ ' + item.discountPrice,
     stock: item.stock,
     sold: 10, // Assuming sold count is static for demonstration
   }));
@@ -115,7 +122,7 @@ const AllEvents = () => {
                 placeholder="Search Products..."
                 value={searchTerm}
                 onChange={handleSearchChange}
-                className="h-[45px] pl-2 pr-10 w-full border-[#171203] border-[2px] rounded-md"
+                className="h-[45px] pl-2 pr-10 w-full border-[#171203] border-[2px] rounded-md placeholder-[#9e8a4f]"
               />
               <AiOutlineSearch
                 size={30}

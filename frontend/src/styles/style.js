@@ -11,7 +11,7 @@ const styles = {
   button:
     'w-[150px] bg-[#171203] h-[50px] my-3 flex items-center justify-center rounded-xl cursor-pointer hover:opacity-95 transition duration-300 ease-in-out',
   cart_button:
-    'px-[20px] h-[38px] rounded-[20px] bg-[#f63b60] flex items-center justify-center cursor-pointer',
+    'px-[20px] h-[38px] rounded-[20px] bg-[#171203] flex items-center justify-center cursor-pointer',
   cart_button_text: 'text-[#fff] text-[16px] font-[600]',
   input: 'w-full border p-1 rounded-[5px]',
   activeStatus:

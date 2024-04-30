@@ -162,7 +162,7 @@ const AllProducts = () => {
               <input
                 type="text"
                 placeholder={`Search ${viewMode}s...`}
-                className="h-[45px] pl-2 pr-10 w-full border-[#171203] border-[2px] rounded-md"
+                className="h-[45px] pl-2 pr-10 w-full border-[#171203] border-[2px] rounded-md placeholder-[#9e8a4f]"
                 value={searchTerm}
                 onChange={handleSearchChange}
               />

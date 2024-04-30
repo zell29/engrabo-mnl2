@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styles from '../../styles/style';
-import { Country, State } from 'country-state-city';
+import { Country, State, City } from 'country-state-city';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
@@ -12,6 +12,7 @@ const Checkout = () => {
   const { user } = useSelector((state) => state.user);
   const { cart } = useSelector((state) => state.cart);
   const [country, setCountry] = useState('');
+  const [state, setState] = useState('');
   const [city, setCity] = useState('');
   const [userInfo, setUserInfo] = useState(false);
   const [address1, setAddress1] = useState('');
@@ -19,7 +20,7 @@ const Checkout = () => {
   const [zipCode, setZipCode] = useState(null);
   const [couponCode, setCouponCode] = useState('');
   const [couponCodeData, setCouponCodeData] = useState(null);
-  const [discountPrice, setDiscountPrice] = useState(null);
+  const [originalPrice, setOriginalPrice] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,6 +33,7 @@ const Checkout = () => {
       address2 === '' ||
       zipCode === null ||
       country === '' ||
+      state === '' ||
       city === ''
     ) {
       toast.error('Please choose your delivery address!');
@@ -41,6 +43,7 @@ const Checkout = () => {
         address2,
         zipCode,
         country,
+        state,
         city,
       };
 
@@ -49,7 +52,7 @@ const Checkout = () => {
         totalPrice,
         subTotalPrice,
         shipping,
-        discountPrice,
+        originalPrice,
         shippingAddress,
         user,
       };
@@ -61,7 +64,7 @@ const Checkout = () => {
   };
 
   const subTotalPrice = cart.reduce(
-    (acc, item) => acc + item.qty * item.discountPrice,
+    (acc, item) => acc + item.qty * item.originalPrice,
     0
   );
 
@@ -72,35 +75,49 @@ const Checkout = () => {
     e.preventDefault();
     const name = couponCode;
 
-    await axios.get(`${server}/coupon/get-coupon-value/${name}`).then((res) => {
-      const shopId = res.data.couponCode?.shopId;
-      const couponCodeValue = res.data.couponCode?.value;
-      if (res.data.couponCode !== null) {
-        const isCouponValid =
-          cart && cart.filter((item) => item.shopId === shopId);
+    await axios
+      .get(`${server}/coupon/get-coupon-value/${name}`)
+      .then((res) => {
+        // This needs to handle possibly multiple coupons returned
+        const coupon = res.data.couponCodes[0]; // Assuming you want the first match
 
-        if (isCouponValid.length === 0) {
-          toast.error('Coupon code is not valid for this shop');
+        if (coupon) {
+          const today = new Date();
+          const expiryDate = new Date(coupon.expiresAt);
+
+          // Check if the coupon is expired
+          if (expiryDate < today) {
+            toast.error('This coupon has expired.');
+            setCouponCode('');
+            return;
+          }
+
+          // Now we check if the total price meets the minimum amount requirement
+          if (subTotalPrice < coupon.minAmount) {
+            toast.error('This coupon requires a minimum amount to be valid.');
+            setCouponCode('');
+            return;
+          }
+
+          const discount = (subTotalPrice * coupon.value) / 100;
+          setOriginalPrice(subTotalPrice - discount); // Adjusting the original price after discount
+          setCouponCodeData(coupon); // Storing the coupon data for further use
           setCouponCode('');
+          toast.success('Coupon applied successfully!');
         } else {
-          const eligiblePrice = isCouponValid.reduce(
-            (acc, item) => acc + item.qty * item.discountPrice,
-            0
-          );
-          const discountPrice = (eligiblePrice * couponCodeValue) / 100;
-          setDiscountPrice(discountPrice);
-          setCouponCodeData(res.data.couponCode);
+          toast.error("Coupon code doesn't exist!");
           setCouponCode('');
         }
-      }
-      if (res.data.couponCode === null) {
-        toast.error("Coupon code doesn't exists!");
-        setCouponCode('');
-      }
-    });
+      })
+      .catch((error) => {
+        toast.error('Failed to fetch coupon data.');
+        console.error('Error fetching coupon:', error);
+      });
   };
 
-  const discountPercentenge = couponCodeData ? discountPrice : '';
+  const discountPercentenge = couponCodeData
+    ? ((couponCodeData.value * subTotalPrice) / 100).toFixed(2)
+    : 0;
 
   const totalPrice = couponCodeData
     ? (subTotalPrice + shipping - discountPercentenge).toFixed(2)
@@ -116,6 +133,8 @@ const Checkout = () => {
             user={user}
             country={country}
             setCountry={setCountry}
+            state={state}
+            setState={setState}
             city={city}
             setCity={setCity}
             userInfo={userInfo}
@@ -154,6 +173,8 @@ const ShippingInfo = ({
   user,
   country,
   setCountry,
+  state,
+  setState,
   city,
   setCity,
   userInfo,
@@ -171,53 +192,60 @@ const ShippingInfo = ({
       <br />
       <form>
         <div className="w-full flex pb-3">
+          {/* Name */}
           <div className="w-[50%]">
-            <label className="block pb-2">Full Name</label>
+            <label className="block pb-2 !text-[#171203]">Full Name</label>
             <input
               type="text"
               value={user && user.name}
               required
-              className={`${styles.input} !w-[95%]`}
+              className="h-[40px] w-[95%] appearance-none block px-3 border border-[#9e8a4f] rounded-[3px] shadow-sm placeholder-[#9e8a4f] focus:outline-none focus:ring-brown-dark focus:border-brown-dark"
             />
           </div>
+
+          {/* Email address */}
           <div className="w-[50%]">
-            <label className="block pb-2">Email Address</label>
+            <label className="block pb-2 !text-[#171203]">Email Address</label>
             <input
               type="email"
               value={user && user.email}
               required
-              className={`${styles.input}`}
+              className="h-[40px] w-full appearance-none block px-3 border border-[#9e8a4f] rounded-[3px] shadow-sm placeholder-[#9e8a4f] focus:outline-none focus:ring-brown-dark focus:border-brown-dark"
             />
           </div>
         </div>
 
         <div className="w-full flex pb-3">
+          {/* Phone number */}
           <div className="w-[50%]">
-            <label className="block pb-2">Phone Number</label>
+            <label className="block pb-2 !text-[#171203]">Phone Number</label>
             <input
               type="number"
               required
               value={user && user.phoneNumber}
-              className={`${styles.input} !w-[95%]`}
+              className="h-[40px] w-[95%] appearance-none block px-3 border border-[#9e8a4f] rounded-[3px] shadow-sm placeholder-[#9e8a4f] focus:outline-none focus:ring-brown-dark focus:border-brown-dark"
             />
           </div>
+
+          {/* Zip code*/}
           <div className="w-[50%]">
-            <label className="block pb-2">Zip Code</label>
+            <label className="block pb-2 !text-[#171203]">Zip Code</label>
             <input
               type="number"
               value={zipCode}
               onChange={(e) => setZipCode(e.target.value)}
               required
-              className={`${styles.input}`}
+              className="h-[40px] w-full appearance-none block px-3 border border-[#9e8a4f] rounded-[3px] shadow-sm placeholder-[#9e8a4f] focus:outline-none focus:ring-brown-dark focus:border-brown-dark"
             />
           </div>
         </div>
 
         <div className="w-full flex pb-3">
+          {/* Country */}
           <div className="w-[50%]">
-            <label className="block pb-2">Country</label>
+            <label className="block pb-2 !text-[#171203]">Country</label>
             <select
-              className="w-[95%] border h-[40px] rounded-[5px]"
+              className="h-[40px] w-[95%] appearance-none block px-3 border border-[#9e8a4f] rounded-[3px] shadow-sm placeholder-[#9e8a4f] focus:outline-none focus:ring-brown-dark focus:border-brown-dark"
               value={country}
               onChange={(e) => setCountry(e.target.value)}
             >
@@ -232,19 +260,27 @@ const ShippingInfo = ({
                 ))}
             </select>
           </div>
+
+          {/* State */}
           <div className="w-[50%]">
-            <label className="block pb-2">City</label>
+            <label className="block pb-2 text-[#171203]">State</label>
             <select
-              className="w-[95%] border h-[40px] rounded-[5px]"
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
+              name=""
+              id=""
+              value={state}
+              onChange={(e) => setState(e.target.value)}
+              className="h-[40px] w-full appearance-none block px-3 border border-[#9e8a4f] rounded-[3px] shadow-sm placeholder-[#9e8a4f] focus:outline-none focus:ring-brown-dark focus:border-brown-dark"
             >
-              <option className="block pb-2" value="">
-                Choose your City
+              <option value="" className="block pb-2">
+                Choose your State
               </option>
               {State &&
                 State.getStatesOfCountry(country).map((item) => (
-                  <option key={item.isoCode} value={item.isoCode}>
+                  <option
+                    className="block pb-2"
+                    key={item.isoCode}
+                    value={item.isoCode}
+                  >
                     {item.name}
                   </option>
                 ))}
@@ -253,32 +289,67 @@ const ShippingInfo = ({
         </div>
 
         <div className="w-full flex pb-3">
+          {/* City */}
+          <div className="w-full">
+            {/* City Selection */}
+            <label className="block pb-2 text-[#171203]">City</label>
+            <select
+              name=""
+              id=""
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              className="h-[40px] w-full appearance-none block px-3 border border-[#9e8a4f] rounded-[3px] shadow-sm placeholder-[#9e8a4f] focus:outline-none focus:ring-brown-dark focus:border-brown-dark"
+            >
+              <option value="" className="block pb-2">
+                Choose your City
+              </option>
+              {City &&
+                State &&
+                City.getCitiesOfState(country, state).map((item) => (
+                  <option
+                    className="block pb-2"
+                    key={item.isoCode}
+                    value={item.isoCode}
+                  >
+                    {item.name}
+                  </option>
+                ))}
+            </select>
+          </div>
+        </div>
+
+        <div className="w-full flex pb-3">
+          {/* Address 1 */}
           <div className="w-[50%]">
-            <label className="block pb-2">Address1</label>
+            <label className="block pb-2 !text-[#171203]">Address1</label>
             <input
               type="address"
               required
               value={address1}
               onChange={(e) => setAddress1(e.target.value)}
-              className={`${styles.input} !w-[95%]`}
+              className="h-[40px] w-[95%] appearance-none block px-3 border border-[#9e8a4f] rounded-[3px] shadow-sm placeholder-[#9e8a4f] focus:outline-none focus:ring-brown-dark focus:border-brown-dark"
             />
           </div>
+
+          {/* Address 2 */}
           <div className="w-[50%]">
-            <label className="block pb-2">Address2</label>
+            <label className="block pb-2 !text-[#171203]">Address2</label>
             <input
               type="address"
               value={address2}
               onChange={(e) => setAddress2(e.target.value)}
               required
-              className={`${styles.input}`}
+              className="h-[40px] w-full appearance-none block px-3 border border-[#9e8a4f] rounded-[3px] shadow-sm placeholder-[#9e8a4f] focus:outline-none focus:ring-brown-dark focus:border-brown-dark"
             />
           </div>
         </div>
 
         <div></div>
       </form>
+
+      {/* Select Saved Address */}
       <h5
-        className="text-[18px] cursor-pointer inline-block"
+        className="text-[18px] font-[600] cursor-pointer inline-block !text-[#171203]"
         onClick={() => setUserInfo(!userInfo)}
       >
         Choose From saved address
@@ -290,13 +361,14 @@ const ShippingInfo = ({
               <div className="w-full flex mt-1">
                 <input
                   type="checkbox"
-                  className="mr-3"
+                  className="mr-3 !text-[#171203]"
                   value={item.addressType}
                   onClick={() =>
                     setAddress1(item.address1) ||
                     setAddress2(item.address2) ||
                     setZipCode(item.zipCode) ||
                     setCountry(item.country) ||
+                    setState(item.state) ||
                     setCity(item.city)
                   }
                 />
@@ -321,34 +393,34 @@ const CartData = ({
   return (
     <div className="w-full bg-[#fff] rounded-md p-5 pb-8">
       <div className="flex justify-between">
-        <h3 className="text-[16px] font-[400] text-[#000000a4]">subtotal:</h3>
-        <h5 className="text-[18px] font-[600]">${subTotalPrice}</h5>
+        <h3 className="text-[16px] font-[400] text-[#b19b56]">subtotal:</h3>
+        <h5 className="text-[18px] font-[600]">₱ {subTotalPrice}</h5>
       </div>
       <br />
       <div className="flex justify-between">
-        <h3 className="text-[16px] font-[400] text-[#000000a4]">shipping:</h3>
-        <h5 className="text-[18px] font-[600]">${shipping.toFixed(2)}</h5>
+        <h3 className="text-[16px] font-[400] text-[#b19b56]">shipping:</h3>
+        <h5 className="text-[18px] font-[600]">₱ {shipping.toFixed(2)}</h5>
       </div>
       <br />
       <div className="flex justify-between border-b pb-3">
-        <h3 className="text-[16px] font-[400] text-[#000000a4]">Discount:</h3>
+        <h3 className="text-[16px] font-[400] text-[#b19b56]">Discount:</h3>
         <h5 className="text-[18px] font-[600]">
-          - {discountPercentenge ? '$' + discountPercentenge.toString() : null}
+          - {discountPercentenge ? '₱' + discountPercentenge.toString() : null}
         </h5>
       </div>
-      <h5 className="text-[18px] font-[600] text-end pt-3">${totalPrice}</h5>
+      <h5 className="text-[18px] font-[600] text-end pt-3">₱ {totalPrice}</h5>
       <br />
       <form onSubmit={handleSubmit}>
         <input
           type="text"
-          className={`${styles.input} h-[40px] pl-2`}
+          className="mt-2 appearance-none block w-full px-3 h-[45px] border border-[#9e8a4f] rounded-[3px] shadow-sm placeholder-[#9e8a4f] focus:outline-none focus:ring-brown-dark focus:border-brown-dark"
           placeholder="Coupoun code"
           value={couponCode}
           onChange={(e) => setCouponCode(e.target.value)}
           required
         />
         <input
-          className={`w-full h-[40px] border border-[#f63b60] text-center text-[#f63b60] rounded-[3px] mt-8 cursor-pointer`}
+          className={`w-full h-[40px] border border-[#171203] text-center text-[#171203] rounded-[3px] mt-8 cursor-pointer `}
           required
           value="Apply code"
           type="submit"
