@@ -64,7 +64,10 @@ const Checkout = () => {
   };
 
   const subTotalPrice = cart.reduce(
-    (acc, item) => acc + item.qty * item.originalPrice,
+    (acc, item) =>
+      acc +
+      item.qty *
+        (item.discountPrice > 0 ? item.discountPrice : item.originalPrice),
     0
   );
 

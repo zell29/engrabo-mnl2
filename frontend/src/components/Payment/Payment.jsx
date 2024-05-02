@@ -28,13 +28,13 @@ const Payment = () => {
           {
             description: 'Sunflower',
             amount: {
-              currency_code: 'USD',
-              value: orderData?.totalPrice,
+              currency_code: 'PHP', // This should match the PayPalScriptProvider currency
+              value: orderData?.totalPrice.toString(), // Make sure this is a string
             },
           },
         ],
         application_context: {
-          shipping_preference: 'NO_SHIPPING',
+          shipping_preference: 'NO_SHIPPING', // Adjust as needed
         },
       })
       .then((orderID) => {
@@ -52,13 +52,14 @@ const Payment = () => {
   const onApprove = async (data, actions) => {
     return actions.order.capture().then(function (details) {
       const { payer } = details;
-      if (payer) {
-        paypalPaymentHandler(payer);
+      let paymentInfo = payer;
+      if (paymentInfo !== undefined) {
+        paypalPaymentHandler(paymentInfo);
       }
     });
   };
 
-  const paypalPaymentHandler = async (payer) => {
+  const paypalPaymentHandler = async (paymentInfo) => {
     const config = {
       headers: {
         'Content-Type': 'application/json',
@@ -66,7 +67,7 @@ const Payment = () => {
     };
 
     order.paymentInfo = {
-      id: payer.payer_id,
+      id: paymentInfo.payer_id,
       status: 'succeeded',
       type: 'Paypal',
     };
@@ -218,13 +219,17 @@ const PaymentInfo = ({
                   <PayPalScriptProvider
                     options={{
                       'client-id':
-                        'Aczac4Ry9_QA1t4c7TKH9UusH3RTe6onyICPoCToHG10kjlNdI-qwobbW9JAHzaRQwFMn2-k660853jn',
+                        'AY9RmKYNdhQRMajz2-Ytjdnql6TGH0yMp4q39m7U7UBs-2pS8rofvGAibY9hSAXj9v7RlXUo3FVktmHp',
+                      currency: 'PHP',
                     }}
                   >
                     <PayPalButtons
                       style={{ layout: 'vertical' }}
                       onApprove={onApprove}
                       createOrder={createOrder}
+                      onError={(error) =>
+                        console.error('PayPal Button Error:', error)
+                      }
                     />
                   </PayPalScriptProvider>
                 </div>
