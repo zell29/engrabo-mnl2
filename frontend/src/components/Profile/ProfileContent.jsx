@@ -16,6 +16,7 @@ import { City, Country, State } from 'country-state-city';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { RxCross1 } from 'react-icons/rx';
+import { getAllOrdersOfUser } from '../../redux/action/order';
 
 const ProfileContent = ({ active }) => {
   const { user, error, successMessage } = useSelector((state) => state.user);
@@ -211,18 +212,13 @@ const ProfileContent = ({ active }) => {
 
 // All Orders Table
 const AllOrders = () => {
-  const orders = [
-    {
-      _id: '123456',
-      orderItems: [
-        {
-          name: 'Chopping Board Engraved',
-        },
-      ],
-      totalPrice: 120,
-      orderStatus: 'Processing',
-    },
-  ];
+  const { user } = useSelector((state) => state.user);
+  const { orders } = useSelector((state) => state.order);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAllOrdersOfUser(user._id));
+  }, [dispatch, user._id]);
 
   const columns = [
     { field: 'id', headerName: 'Order ID', minWidth: 150, flex: 0.7 },
@@ -262,7 +258,7 @@ const AllOrders = () => {
       renderCell: (params) => {
         return (
           <>
-            <Link to={`/order/${params.id}`}>
+            <Link to={`/user/order/${params.id}`}>
               <Button>
                 <MdTrackChanges size={20} />
               </Button>
@@ -279,11 +275,12 @@ const AllOrders = () => {
     orders.forEach((item) => {
       row.push({
         id: item._id,
-        itemsQty: item.orderItems.length,
+        itemsQty: item.cart.length,
         total: '₱' + item.totalPrice,
-        status: item.orderStatus,
+        status: item.status,
       });
     });
+
   return (
     <div className="pl-8 pt-1">
       <DataGrid
