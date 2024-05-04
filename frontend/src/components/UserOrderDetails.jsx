@@ -45,12 +45,27 @@ const UserOrderDetails = () => {
       .then((res) => {
         toast.success(res.data.message);
         dispatch(getAllOrdersOfUser(user._id));
+
         setComment('');
-        setRating('');
+        setRating(1);
         setOpen(false);
       })
       .catch((error) => {
         toast.error(error);
+      });
+  };
+
+  const refundHandler = async () => {
+    await axios
+      .put(`${server}/order/order-refund/${id}`, {
+        status: 'Processing Refund',
+      })
+      .then((res) => {
+        toast.success(res.data.message);
+        dispatch(getAllOrdersOfUser(user._id));
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
       });
   };
 
@@ -221,7 +236,7 @@ const UserOrderDetails = () => {
       <br />
 
       {/* Shipping Address */}
-      <div className="w-full 800px:flex items-center">
+      <div className="w-full 800px:flex ">
         <div className="w-full 800px:w-[60%]">
           <h4 className="pt-3 text-[20px] font-[600]">Shipping Address</h4>
           <h4 className="pt-3 text-[20px]">
@@ -234,8 +249,8 @@ const UserOrderDetails = () => {
           <h4 className="pt-3 text-[20px]">{data?.shippingAddress.city}</h4>
           <h4 className="pt-3 text-[20px]">{data?.user?.phoneNumber}</h4>
         </div>
-        <div className="w-full 800px:w-[40%]">
-          <h4 className="pt-3 text-[20px]">Payment Information</h4>
+        <div className="w-full 800px:w-[40%] ">
+          <h4 className="pt-3 text-[20px] font-[600]">Payment Information</h4>
           <h4>
             Status:{' '}
             {data?.paymentInfo?.status ? data?.paymentInfo?.status : 'Not Paid'}
@@ -244,14 +259,27 @@ const UserOrderDetails = () => {
       </div>
 
       <br />
-
-      <Link to="/">
-        <div
-          className={`${styles.button}!w-max !h-[45px] px-3 !rounded-[5px] mr-3 mb-3 font-[600] text-[18px] text-[#fff4d7]`}
-        >
-          Send Message
-        </div>
-      </Link>
+      <div className="flex items-center justify-between">
+        <Link to="/">
+          <div
+            className={`${styles.button}!w-max !h-[45px] px-3 !rounded-[5px] mr-3 mb-3 font-[600] text-[18px] text-[#fff4d7]`}
+          >
+            Send Message
+          </div>
+        </Link>
+        {data?.status === 'Delivered' ? (
+          <div
+            className={`${styles.button}!w-max !h-[45px] px-3 !rounded-[5px] mr-3 mb-3 font-[600] text-[18px] text-[#fff4d7]`}
+            onClick={refundHandler}
+          >
+            Refund
+          </div>
+        ) : (
+          <div className="w-[150px] bg-[#171203] my-3 flex items-center justify-center !h-[45px] px-3 !rounded-[5px] mr-3 mb-3 font-[600] text-[15px] text-[#fff4d7] opacity-50 cursor-not-allowed">
+            Refund
+          </div>
+        )}
+      </div>
     </div>
   );
 };

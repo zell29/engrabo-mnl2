@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { backend_url, server } from '../../server';
 import { useDispatch, useSelector } from 'react-redux';
-import { AiOutlineCamera, AiOutlineDelete } from 'react-icons/ai';
+import {
+  AiOutlineArrowRight,
+  AiOutlineCamera,
+  AiOutlineDelete,
+} from 'react-icons/ai';
 import styles from '../../styles/style';
 import { Link } from 'react-router-dom';
-import { MdOutlineTrackChanges, MdTrackChanges } from 'react-icons/md';
+import { MdTrackChanges } from 'react-icons/md';
 import Button from '@mui/material/Button';
 import { DataGrid } from '@mui/x-data-grid';
 import {
@@ -261,7 +265,7 @@ const AllOrders = () => {
           <>
             <Link to={`/user/order/${params.id}`}>
               <Button>
-                <MdTrackChanges size={20} />
+                <AiOutlineArrowRight size={20} />
               </Button>
             </Link>
           </>
@@ -297,18 +301,17 @@ const AllOrders = () => {
 
 // All Refund Orders Table
 const AllRefundOrders = () => {
-  const orders = [
-    {
-      _id: '123456',
-      orderItems: [
-        {
-          name: 'Chopping Board Engraved',
-        },
-      ],
-      totalPrice: 120,
-      orderStatus: 'Processing',
-    },
-  ];
+  const { user } = useSelector((state) => state.user);
+  const { orders } = useSelector((state) => state.order);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAllOrdersOfUser(user._id));
+  }, [dispatch, user._id]);
+
+  const eligibleOrders =
+    orders && orders.filter((item) => item.status === 'Processing Refund');
 
   const columns = [
     { field: 'id', headerName: 'Order ID', minWidth: 150, flex: 0.7 },
@@ -348,9 +351,9 @@ const AllRefundOrders = () => {
       renderCell: (params) => {
         return (
           <>
-            <Link to={`/order/${params.id}`}>
+            <Link to={`/user/order/${params.id}`}>
               <Button>
-                <MdTrackChanges size={20} />
+                <AiOutlineArrowRight size={20} />
               </Button>
             </Link>
           </>
@@ -361,13 +364,13 @@ const AllRefundOrders = () => {
 
   const row = [];
 
-  orders &&
-    orders.forEach((item) => {
+  eligibleOrders &&
+    eligibleOrders.forEach((item) => {
       row.push({
         id: item._id,
-        itemsQty: item.orderItems.length,
+        itemsQty: item.cart.length,
         total: '₱' + item.totalPrice,
-        status: item.orderStatus,
+        status: item.status,
       });
     });
 
@@ -386,26 +389,18 @@ const AllRefundOrders = () => {
 
 // Track Order Table
 const TrackOrder = () => {
-  const orders = [
-    {
-      _id: '123456',
-      orderItems: [
-        {
-          name: 'Chopping Board Engraved',
-        },
-      ],
-      totalPrice: 120,
-      orderStatus: 'Processing',
-    },
-  ];
+  const { user } = useSelector((state) => state.user);
+  const { orders } = useSelector((state) => state.order);
 
-  const colums = [
-    {
-      field: 'id',
-      headerName: 'Order ID',
-      minWidth: 150,
-      flex: 0.7,
-    },
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAllOrdersOfUser(user._id));
+  }, [dispatch, user._id]);
+
+  const columns = [
+    { field: 'id', headerName: 'Order ID', minWidth: 150, flex: 0.7 },
+
     {
       field: 'status',
       headerName: 'Status',
@@ -430,19 +425,20 @@ const TrackOrder = () => {
       minWidth: 130,
       flex: 0.8,
     },
+
     {
       field: ' ',
       flex: 1,
-      minWidth: 130,
+      minWidth: 150,
       headerName: '',
       type: 'number',
       sortable: false,
       renderCell: (params) => {
         return (
           <>
-            <Link to={`/order/${params.id}`}>
+            <Link to={`/user/track/order/${params.id}`}>
               <Button>
-                <MdOutlineTrackChanges size={20} />
+                <MdTrackChanges size={20} />
               </Button>
             </Link>
           </>
@@ -457,9 +453,9 @@ const TrackOrder = () => {
     orders.forEach((item) => {
       row.push({
         id: item._id,
-        itemsQty: item.orderItems.length,
+        itemsQty: item.cart.length,
         total: '₱' + item.totalPrice,
-        status: item.orderStatus,
+        status: item.status,
       });
     });
 
@@ -467,7 +463,7 @@ const TrackOrder = () => {
     <div className="pl-8 pt-1">
       <DataGrid
         rows={row}
-        columns={colums}
+        columns={columns}
         pageSize={10}
         disableSelectionOnClick
         autoHeight

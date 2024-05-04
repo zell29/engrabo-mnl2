@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import {
   AiFillHeart,
-  AiFillStar,
   AiOutlineEye,
   AiOutlineHeart,
   AiOutlineShoppingCart,
-  AiOutlineStar,
 } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
 import styles from '../../../styles/style';
@@ -19,6 +17,7 @@ import {
 } from '../../../redux/action/wishlist';
 import { toast } from 'react-toastify';
 import { addTocart } from '../../../redux/action/cart';
+import Ratings from '../../Products/Ratings';
 
 const ProductCard = ({ data }) => {
   const { wishlist } = useSelector((state) => state.wishlist);
@@ -92,31 +91,7 @@ const ProductCard = ({ data }) => {
 
           {/* Rating of Product */}
           <div className="flex pb-2 pt-1">
-            <AiFillStar
-              className="mr-2 cursor-pointer"
-              size={20}
-              color="#F6BA00"
-            />
-            <AiFillStar
-              className="mr-2 cursor-pointer"
-              size={20}
-              color="#F6BA00"
-            />
-            <AiFillStar
-              className="mr-2 cursor-pointer"
-              size={20}
-              color="#F6BA00"
-            />
-            <AiFillStar
-              className="mr-2 cursor-pointer"
-              size={20}
-              color="#F6BA00"
-            />
-            <AiOutlineStar
-              className="mr-2 cursor-pointer"
-              size={20}
-              color="#F6BA00"
-            />
+            <Ratings rating={data?.ratings} />
           </div>
 
           {/* Price and Sold of Product */}

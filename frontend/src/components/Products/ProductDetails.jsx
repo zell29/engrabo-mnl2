@@ -13,6 +13,7 @@ import { getAllProductsAdmin } from '../../redux/action/product';
 import { addToWishlist, removeFromWishlist } from '../../redux/action/wishlist';
 import { toast } from 'react-toastify';
 import { addTocart } from '../../redux/action/cart';
+import Ratings from './Ratings';
 
 const ProductDetails = ({ data }) => {
   const { wishlist } = useSelector((state) => state.wishlist);
@@ -87,6 +88,19 @@ const ProductDetails = ({ data }) => {
     }
   };
 
+  const totalReviewsLength =
+    products &&
+    products.reduce((acc, product) => acc + product.reviews.length, 0);
+
+  const totalRatings =
+    products &&
+    products.reduce(
+      (acc, product) =>
+        acc + product.reviews.reduce((sum, review) => sum + review.rating, 0),
+      0
+    );
+
+  const averageRating = totalRatings / totalReviewsLength || 0;
   return (
     <div className="bg-[#fff4d7] ">
       {data ? (
@@ -222,7 +236,7 @@ const ProductDetails = ({ data }) => {
                       Engrabo MNL
                     </h3>
                     <h5 className="pb-3 text-[15px] text-[#534723]">
-                      (4/5) Ratings
+                      ({averageRating}/5) Ratings
                     </h5>
                   </div>
                 </Link>
@@ -237,7 +251,12 @@ const ProductDetails = ({ data }) => {
               </div>
             </div>
           </div>
-          <ProductDetailsInfo data={data} products={products} />
+          <ProductDetailsInfo
+            data={data}
+            products={products}
+            totalReviewsLength={totalReviewsLength}
+            averageRating={averageRating}
+          />
           <br />
           <br />
         </div>
@@ -246,7 +265,12 @@ const ProductDetails = ({ data }) => {
   );
 };
 
-const ProductDetailsInfo = ({ data, products }) => {
+const ProductDetailsInfo = ({
+  data,
+  products,
+  totalReviewsLength,
+  averageRating,
+}) => {
   const [active, setActive] = useState(1);
   return (
     <div className="bg-[#f7ebca] px-3 800px:px-10 py-2 rounded">
@@ -334,8 +358,31 @@ const ProductDetailsInfo = ({ data, products }) => {
 
       {/* Active for Product Reviews */}
       {active === 2 ? (
-        <div className="w-full justify-center min-h-[40vh] flex items-center">
-          <p>No Reviews yet!</p>
+        <div className="w-full py-3 min-h-[40vh] flex flex-col items-center overflow-y-scroll hide-scrollbar">
+          {data &&
+            data.reviews.map((item, index) => (
+              <div className="w-full flex my-2">
+                <div className="pl-2">
+                  <img
+                    src={`${backend_url}/${item.user.avatar.url}`}
+                    alt=""
+                    className="w-[50px] h-[50] rounded-full"
+                  />
+                </div>
+                <div className="pl-2">
+                  <div className="w-full flex flex-col">
+                    <h1 className="font-[500] text-[#171203]">
+                      {item.user.name}
+                    </h1>
+                    <Ratings rating={item.rating} />
+                  </div>
+                  <p>{item.comment}</p>
+                </div>
+              </div>
+            ))}
+          <div className="w-full flex justify-center">
+            {data && data.reviews.length === 0 && <h5>No Reviews yet!</h5>}
+          </div>
         </div>
       ) : null}
 
@@ -353,7 +400,7 @@ const ProductDetailsInfo = ({ data, products }) => {
               <div className="pl-3">
                 <h3 className={`${styles.shop_name}`}>Engrabo MNL</h3>
                 <h5 className="pb-2 text-[15px] text-[#534723]">
-                  (4/5) Ratings
+                  ({averageRating}/5) Ratings
                 </h5>
               </div>
             </div>
@@ -381,7 +428,8 @@ const ProductDetailsInfo = ({ data, products }) => {
                 </span>
               </h5>
               <h5 className="font-[600] text-[#171203] pt-3">
-                Total Reviews: <span className="font-[500]">50</span>
+                Total Reviews:{' '}
+                <span className="font-[500]">{totalReviewsLength}</span>
               </h5>
               <Link to="/">
                 <div

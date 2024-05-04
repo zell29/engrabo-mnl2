@@ -19,6 +19,7 @@ import {
   AdminActivationPage,
   AdminLoginPage,
   OrderDetailsPage,
+  TrackOrderPage,
 } from './routes/Routes.js';
 import {
   AdminHomePage,
@@ -94,6 +95,15 @@ const App = () => {
           element={
             <ProtectedRoute>
               <OrderDetailsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/user/track/order/:id"
+          element={
+            <ProtectedRoute>
+              <TrackOrderPage />
             </ProtectedRoute>
           }
         />
