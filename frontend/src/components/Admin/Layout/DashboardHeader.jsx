@@ -67,7 +67,7 @@ const DashboardHeader = () => {
           </Link>
 
           {/* Profile */}
-          <Link to={`/admin/${admin._id}`}>
+          <Link to={`/dashboard`}>
             <img
               src={`${backend_url}/${admin.avatar.url}`}
               className="w-[35px] h-[35px] rounded-full"

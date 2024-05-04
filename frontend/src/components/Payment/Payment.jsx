@@ -68,7 +68,7 @@ const Payment = () => {
 
     order.paymentInfo = {
       id: paymentInfo.payer_id,
-      status: 'succeeded',
+      status: 'Paid',
       type: 'Paypal',
     };
 

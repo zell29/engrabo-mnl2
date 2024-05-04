@@ -38,6 +38,19 @@ export const orderReducer = createReducer(initialState, (builder) => {
       state.error = action.payload;
     })
 
+    // Get all order of user on admin
+    .addCase('getAllOrdersAdminRequest', (state) => {
+      state.isLoading = true;
+    })
+    .addCase('getAllOrdersAdminSuccess', (state, action) => {
+      state.isLoading = false;
+      state.orders = action.payload;
+    })
+    .addCase('getAllOrdersAdminFailed', (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    })
+
     // Clear Errors
     .addCase('clearErrors', (state) => {
       state.error = null;

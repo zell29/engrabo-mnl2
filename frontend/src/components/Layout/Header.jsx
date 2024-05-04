@@ -28,6 +28,7 @@ import { useLocation } from 'react-router-dom';
 
 const Header = ({ activeHeading }) => {
   const { isAuthenticated, user } = useSelector((state) => state.user);
+  const { isAdmin } = useSelector((state) => state.admin);
   const { cart } = useSelector((state) => state.cart);
   const { wishlist } = useSelector((state) => state.wishlist);
 
@@ -118,9 +119,9 @@ const Header = ({ activeHeading }) => {
           <div
             className={`${styles.button} hover:opacity-95 transition duration-300 ease-in-out`}
           >
-            <Link to="/best-offer">
+            <Link to="/admin-login">
               <h1 className="text-[#fff4d7] flex items-center">
-                Best Offer <IoIosArrowForward />
+                {isAdmin ? 'Go Dashboard' : 'Best Offer'} <IoIosArrowForward />
               </h1>
             </Link>
           </div>

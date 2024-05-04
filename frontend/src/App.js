@@ -18,6 +18,7 @@ import {
   AdminCreatePage,
   AdminActivationPage,
   AdminLoginPage,
+  OrderDetailsPage,
 } from './routes/Routes.js';
 import {
   AdminHomePage,
@@ -28,6 +29,8 @@ import {
   AdminAllEvents,
   AdminAllCoupons,
   AdminAllCategories,
+  AdminAllOrders,
+  AdminOrdersDetails,
 } from './routes/AdminRoutes';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -86,6 +89,15 @@ const App = () => {
           }
         />
 
+        <Route
+          path="/user/order/:id"
+          element={
+            <ProtectedRoute>
+              <OrderDetailsPage />
+            </ProtectedRoute>
+          }
+        />
+
         {/* Admin Route */}
         <Route path="/admin-create" element={<AdminCreatePage />} />
         <Route path="/admin-login" element={<AdminLoginPage />} />
@@ -122,6 +134,24 @@ const App = () => {
           element={
             <AdminProtectedRoute>
               <AdminAllProducts />
+            </AdminProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/dashboard-orders"
+          element={
+            <AdminProtectedRoute>
+              <AdminAllOrders />
+            </AdminProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/order/:id"
+          element={
+            <AdminProtectedRoute>
+              <AdminOrdersDetails />
             </AdminProtectedRoute>
           }
         />

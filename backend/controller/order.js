@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const ErrorHandler = require('../utils/ErrorHandler');
 const catchAsyncError = require('../middleware/catchAsyncError');
-const { isAuthenticated } = require('../middleware/auth');
+const { isAuthenticated, isAdmin } = require('../middleware/auth');
 const Order = require('../model/order');
 const Product = require('../model/product');
 
@@ -56,6 +56,7 @@ router.get(
       const orders = await Order.find({ 'user._id': req.params.userId }).sort({
         createAt: -1,
       });
+
       res.status(200).json({
         success: true,
         orders,
@@ -66,4 +67,68 @@ router.get(
   })
 );
 
+// Get all orders of admin
+router.get(
+  '/get-admin-all-orders/:adminId',
+  catchAsyncError(async (req, res, next) => {
+    try {
+      const orders = await Order.find({
+        'cart.adminId': req.params.adminId,
+      }).sort({
+        createAt: -1,
+      });
+
+      res.status(200).json({
+        success: true,
+        orders,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  })
+);
+
+// Update order status for Admin
+router.put(
+  '/update-order-status/:id',
+  isAdmin,
+  catchAsyncError(async (req, res, next) => {
+    try {
+      const order = await Order.findById(req.params.id);
+
+      if (!order) {
+        return next(new ErrorHandler('Order not found', 400));
+      }
+      if (req.body.status === 'Transferred to delivery partner') {
+        order.cart.forEach(async (o) => {
+          await updateOrder(o._id, o.qty);
+        });
+      }
+
+      order.status = req.body.status;
+
+      if (req.body.status === 'Delivered') {
+        order.deliveredAt = Date.now();
+        order.paymentInfo.status = 'Succeeded';
+      }
+
+      await order.save({ validateBeforeSave: false });
+
+      res.status(200).json({
+        success: true,
+        order,
+      });
+
+      async function updateOrder(id, qty) {
+        const product = await Product.findById(id);
+        product.stock -= qty;
+        product.sold_out += qty;
+
+        await product.save({ validateBeforeSave: false });
+      }
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  })
+);
 module.exports = router;

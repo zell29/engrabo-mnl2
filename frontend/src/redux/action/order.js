@@ -23,3 +23,27 @@ export const getAllOrdersOfUser = (userId) => async (dispatch) => {
     });
   }
 };
+
+// Get all order of user on admin
+export const getAllOrdersOfAdmin = (adminId) => async (dispatch) => {
+  console.log(adminId);
+  try {
+    dispatch({
+      type: 'getAllOrdersAdminRequest',
+    });
+
+    const { data } = await axios.get(
+      `${server}/order/get-admin-all-orders/${adminId}`
+    );
+
+    dispatch({
+      type: 'getAllOrdersAdminSuccess',
+      payload: data.orders,
+    });
+  } catch (error) {
+    dispatch({
+      type: 'getAllOrdersAdminFailed',
+      payload: error.response.data.message,
+    });
+  }
+};
