@@ -13,6 +13,7 @@ import Button from '@mui/material/Button';
 import { DataGrid } from '@mui/x-data-grid';
 import {
   deleteUserAddress,
+  loadUser,
   updateUserAddress,
   updateUserInformation,
 } from '../../redux/action/user';
@@ -23,7 +24,7 @@ import { RxCross1 } from 'react-icons/rx';
 import { getAllOrdersOfUser } from '../../redux/action/order';
 
 const ProfileContent = ({ active }) => {
-  const { user, error, successMessage } = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user);
   const [name, setName] = useState(user && user.name);
   const [email, setEmail] = useState(user && user.email);
   const [phoneNumber, setPhoneNumber] = useState(user && user.phoneNumber);
@@ -31,20 +32,9 @@ const ProfileContent = ({ active }) => {
   const [avatar, setAvatar] = useState(null);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (error) {
-      toast.error(error);
-      dispatch({ type: 'clearErrors' });
-    }
-    if (successMessage) {
-      toast.success(successMessage.successMessage);
-    }
-  }, [error, dispatch, successMessage]);
-
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(updateUserInformation(name, email, phoneNumber, password));
-    toast.success(`Hi ${user.name} your information is now updated!`);
   };
 
   useEffect(() => {
@@ -69,7 +59,8 @@ const ProfileContent = ({ active }) => {
         withCredentials: true,
       })
       .then((response) => {
-        window.location.reload();
+        dispatch(loadUser());
+        toast.success('Avatar updated successfully!');
       })
       .catch((error) => {
         toast.error(error);

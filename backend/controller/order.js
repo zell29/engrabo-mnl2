@@ -157,4 +157,45 @@ router.put(
     }
   })
 );
+
+// Refund for admin side
+router.put(
+  '/order-refund-success/:id',
+  isAdmin,
+  catchAsyncError(async (req, res, next) => {
+    try {
+      const order = await Order.findById(req.params.id);
+
+      if (!order) {
+        return next(new ErrorHandler('Order not found!'));
+      }
+
+      order.status = req.body.status;
+
+      await order.save();
+
+      res.status(200).json({
+        success: true,
+        message: 'Order Refund Successfully!',
+      });
+
+      if (req.body.status === 'Refund Approved') {
+        order.cart.forEach(async (o) => {
+          await updateOrder(o._id, o.qty);
+        });
+      }
+
+      async function updateOrder(id, qty) {
+        const product = await Product.findById(id);
+        product.stock += qty;
+        product.sold_out -= qty;
+
+        await product.save({ validateBeforeSave: false });
+      }
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  })
+);
+
 module.exports = router;

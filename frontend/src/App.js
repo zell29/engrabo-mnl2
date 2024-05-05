@@ -32,6 +32,8 @@ import {
   AdminAllCategories,
   AdminAllOrders,
   AdminOrdersDetails,
+  AdminAllRefunds,
+  AdminUpdatePasswordPage,
 } from './routes/AdminRoutes';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -122,6 +124,15 @@ const App = () => {
         />
 
         <Route
+          path="/dashboard-settings"
+          element={
+            <AdminProtectedRoute>
+              <AdminUpdatePasswordPage />
+            </AdminProtectedRoute>
+          }
+        />
+
+        <Route
           path="/dashboard"
           element={
             <AdminProtectedRoute>
@@ -198,6 +209,15 @@ const App = () => {
           element={
             <AdminProtectedRoute>
               <AdminAllCoupons />
+            </AdminProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/dashboard-refunds"
+          element={
+            <AdminProtectedRoute>
+              <AdminAllRefunds />
             </AdminProtectedRoute>
           }
         />

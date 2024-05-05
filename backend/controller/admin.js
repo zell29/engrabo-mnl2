@@ -27,7 +27,7 @@ router.post('/create-admin', upload.single('file'), async (req, res, next) => {
           }
         });
       }
-      return next(new ErrorHandler('User already exists', 400));
+      return next(new ErrorHandler('admin already exists', 400));
     }
     const fileUrl = req.file ? req.file.filename : '';
 
@@ -74,7 +74,7 @@ const createActivationToken = (admin) => {
   });
 };
 
-// Activate user
+// Activate admin
 router.post(
   '/activation',
   catchAsyncError(async (req, res, next) => {
@@ -186,6 +186,118 @@ router.get(
       res.status(201).json({
         success: true,
         message: 'Logout Successfully!',
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
+// Get admin info
+router.get(
+  '/get-admin-info/:id',
+  catchAsyncError(async (req, res, next) => {
+    try {
+      const admin = await Admin.findById(req.params.id);
+      res.status(201).json({
+        success: true,
+        admin,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
+// Update admin profile picture
+router.put(
+  '/update-admin-avatar',
+  isAdmin,
+  upload.single('image'),
+  async (req, res, next) => {
+    try {
+      const admin = await Admin.findById(req.admin.id);
+      if (!admin) {
+        return next(new ErrorHandler('admin not found', 404));
+      }
+
+      // Delete the existing avatar file if it exists
+      if (admin.avatar && admin.avatar.url) {
+        const existAvatarPath = path.join('uploads', admin.avatar.url);
+        if (fs.existsSync(existAvatarPath)) {
+          fs.unlinkSync(existAvatarPath);
+        } else {
+          console.log('Previous avatar file not found:', existAvatarPath);
+        }
+      }
+
+      const fileUrl = req.file ? req.file.filename : admin.avatar.url; // Fallback to existing if no file provided
+
+      // Update admin document
+      admin.avatar = { public_id: req.file.filename, url: fileUrl };
+      await admin.save();
+
+      res
+        .status(200)
+        .json({ success: true, message: 'Avatar updated', admin: admin });
+    } catch (error) {
+      console.error('Failed to update avatar:', error);
+      return next(new ErrorHandler(error.message, 500));
+    }
+  }
+);
+
+// Update admin info
+router.put(
+  '/update-user-info',
+  isAdmin,
+  catchAsyncError(async (req, res, next) => {
+    try {
+      const { name, description, address, phoneNumber, zipCode } = req.body;
+
+      const admin = await Admin.findOne(req.admin._id);
+
+      if (!admin) {
+        return next(new ErrorHandler('Admin not found', 400));
+      }
+
+      admin.name = name;
+      admin.description = description;
+      admin.address = address;
+      admin.phoneNumber = phoneNumber;
+      admin.zipCode = zipCode;
+
+      await admin.save();
+
+      res.status(201).json({
+        success: true,
+        admin,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
+// Update admin password
+router.put(
+  '/update-admin-password',
+  isAuthenticated,
+  isAdmin,
+  catchAsyncError(async (req, res, next) => {
+    try {
+      const admin = await Admin.findById(req.admin._id).select('+password');
+
+      if (!(await admin.comparePassword(req.body.oldPassword))) {
+        return next(new ErrorHandler('Current password is incorrect!', 400));
+      }
+
+      admin.password = req.body.newPassword; // Ensure you hash the password if it isn't handled in your model
+      await admin.save();
+
+      res.status(200).json({
+        success: true,
+        message: 'Password updated successfully!',
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));

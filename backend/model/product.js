@@ -21,6 +21,11 @@ const productSchema = new mongoose.Schema({
     required: [true, 'Please enter your product description'],
   },
 
+  // grossPrice: {
+  //   type: Number,
+  //   required: [true, 'Please enter your product gross price'],
+  // },
+
   originalPrice: {
     type: Number,
     required: [true, 'Please enter your product price'],
@@ -54,6 +59,10 @@ const productSchema = new mongoose.Schema({
       },
       productId: {
         type: String,
+      },
+      createdAt: {
+        type: Date,
+        default: Date.now(),
       },
     },
   ],

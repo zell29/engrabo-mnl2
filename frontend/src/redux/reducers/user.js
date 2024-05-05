@@ -22,13 +22,14 @@ export const userReducer = createReducer(initialState, (builder) => {
       state.error = action.payload;
       state.isAuthenticated = false;
     })
+
     // Update user information
     .addCase('updateUserInfoRequest', (state) => {
       state.loading = true;
     })
     .addCase('updateUserInfoSuccess', (state, action) => {
       state.loading = false;
-      state.user = action.payload; // Update user state
+      state.user = action.payload;
     })
     .addCase('updateUserInfoFailed', (state, action) => {
       state.loading = false;
@@ -67,8 +68,26 @@ export const userReducer = createReducer(initialState, (builder) => {
       state.error = action.payload;
     })
 
+    //  Get all user by admin
+    .addCase('getAllUsersRequest', (state) => {
+      state.addressloading = true;
+    })
+    .addCase('getAllUsersSuccess', (state, action) => {
+      state.loading = false;
+      state.user = action.payload.user;
+    })
+    .addCase('getAllUsersFailed', (state, action) => {
+      state.addressloading = false;
+      state.error = action.payload;
+    })
+
     // Clear Error
     .addCase('clearError', (state) => {
       state.error = null;
+    })
+
+    // Clear Error
+    .addCase('clearMessages', (state) => {
+      state.successMessage = null;
     });
 });

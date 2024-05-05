@@ -8,6 +8,8 @@ import AdminAllCoupons from '../pages/Admin/AdminAllCoupons';
 import AdminAllCategories from '../pages/Admin/AdminAllCategories';
 import AdminAllOrders from '../pages/Admin/AdminAllOrders';
 import AdminOrdersDetails from '../pages/Admin/AdminOrdersDetails';
+import AdminAllRefunds from '../pages/Admin/AdminAllRefunds';
+import AdminUpdatePasswordPage from '../pages/Admin/AdminUpdatePasswordPage';
 export {
   AdminDashboardPage,
   AdminCreateProduct,
@@ -19,4 +21,6 @@ export {
   AdminAllCategories,
   AdminAllOrders,
   AdminOrdersDetails,
+  AdminAllRefunds,
+  AdminUpdatePasswordPage,
 };

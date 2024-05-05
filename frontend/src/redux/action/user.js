@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { server } from '../../server';
+import { toast } from 'react-toastify';
 
 // load user
 export const loadUser = () => async (dispatch) => {
@@ -71,15 +72,17 @@ export const updateUserInformation =
         type: 'updateUserInfoSuccess',
         payload: data.user,
       });
+      toast.success('Your information updated successfully!');
     } catch (error) {
       dispatch({
         type: 'updateUserInfoFailed',
         payload: error.response.data.message,
       });
+      toast.error('Please input your correct password!');
     }
   };
 
-// get all users --- admin
+// Get all user by admin
 export const getAllUsers = () => async (dispatch) => {
   try {
     dispatch({
@@ -92,7 +95,7 @@ export const getAllUsers = () => async (dispatch) => {
 
     dispatch({
       type: 'getAllUsersSuccess',
-      payload: data.users,
+      payload: { users: data.users },
     });
   } catch (error) {
     dispatch({

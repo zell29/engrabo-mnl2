@@ -364,7 +364,7 @@ const ProductDetailsInfo = ({
               <div className="w-full flex my-2">
                 <div className="pl-2">
                   <img
-                    src={`${backend_url}/${item.user.avatar.url}`}
+                    src={`${backend_url}/${item.user.avatar?.url}`}
                     alt=""
                     className="w-[50px] h-[50] rounded-full"
                   />

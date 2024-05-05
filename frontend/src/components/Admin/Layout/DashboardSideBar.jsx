@@ -3,7 +3,8 @@ import { AiOutlineGift, AiOutlineLogout } from 'react-icons/ai';
 import { FiPackage, FiShoppingBag } from 'react-icons/fi';
 // import { MdOutlineLocalOffer } from 'react-icons/md';
 import { RxDashboard } from 'react-icons/rx';
-import { CiSettings } from 'react-icons/ci';
+import { RiLockPasswordLine } from 'react-icons/ri';
+
 import { Link } from 'react-router-dom';
 import { BiMessageSquareDetail } from 'react-icons/bi';
 import { HiOutlineReceiptRefund } from 'react-icons/hi';
@@ -139,11 +140,11 @@ const DashboardSideBar = ({ active }) => {
         <Link to="/dashboard-messages" className="w-full flex items-center">
           <BiMessageSquareDetail
             size={30}
-            color={`${active === 8 ? '#171203' : '#6b540f'}`}
+            color={`${active === 6 ? '#171203' : '#6b540f'}`}
           />
           <h5
             className={`800px:block hidden pl-2 text-[18px] font-[400] ${
-              active === 8 ? 'text-[#171203]' : 'text-[#6b540f]'
+              active === 6 ? 'text-[#171203]' : 'text-[#6b540f]'
             }`}
           >
             Admin Inbox
@@ -156,11 +157,11 @@ const DashboardSideBar = ({ active }) => {
         <Link to="/dashboard-refunds" className="w-full flex items-center">
           <HiOutlineReceiptRefund
             size={30}
-            color={`${active === 10 ? '#171203' : '#6b540f'}`}
+            color={`${active === 7 ? '#171203' : '#6b540f'}`}
           />
           <h5
             className={`800px:block hidden pl-2 text-[18px] font-[400] ${
-              active === 10 ? 'text-[#171203]' : 'text-[#6b540f]'
+              active === 7 ? 'text-[#171203]' : 'text-[#6b540f]'
             }`}
           >
             Refunds
@@ -171,16 +172,16 @@ const DashboardSideBar = ({ active }) => {
       {/* Settings */}
       <div className="w-full flex items-center p-4">
         <Link to="/dashboard-settings" className="w-full flex items-center">
-          <CiSettings
+          <RiLockPasswordLine
             size={30}
-            color={`${active === 11 ? '#171203' : '#6b540f'}`}
+            color={`${active === 8 ? '#171203' : '#6b540f'}`}
           />
           <h5
             className={`800px:block hidden pl-2 text-[18px] font-[400] ${
-              active === 11 ? 'text-[#171203]' : 'text-[#6b540f]'
+              active === 8 ? 'text-[#171203]' : 'text-[#6b540f]'
             }`}
           >
-            Setting
+            Change Password
           </h5>
         </Link>
       </div>
