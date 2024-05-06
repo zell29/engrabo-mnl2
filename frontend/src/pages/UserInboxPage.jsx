@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { backend_url, server } from '../../server';
+import { backend_url, server } from '../server';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { AiOutlineArrowRight, AiOutlineSend } from 'react-icons/ai';
-import styles from '../../styles/style';
+import styles from '../styles/style';
 import { GrGallery } from 'react-icons/gr';
 import socketIO from 'socket.io-client';
 import { format } from 'timeago.js';
+import Header from '../components/Layout/Header';
 const ENDPOINT = 'http://localhost:4000/';
 const socketId = socketIO(ENDPOINT, { transports: ['websocket'] });
 
 const DashboardMessages = () => {
-  const { admin } = useSelector((state) => state.admin);
+  const { user } = useSelector((state) => state.user);
   const [conversations, setConversations] = useState([]);
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const [currentChat, setCurrentChat] = useState(null);
@@ -44,7 +45,7 @@ const DashboardMessages = () => {
     const getConversation = async () => {
       try {
         const resonse = await axios.get(
-          `${server}/conversation/get-all-conversation-admin/${admin?._id}`,
+          `${server}/conversation/get-all-conversation-user/${user?._id}`,
           {
             withCredentials: true,
           }
@@ -56,20 +57,20 @@ const DashboardMessages = () => {
       }
     };
     getConversation();
-  }, [admin, messages]);
+  }, [user, messages]);
 
   useEffect(() => {
-    if (admin) {
-      const adminId = admin?._id;
+    if (user) {
+      const adminId = user?._id;
       socketId.emit('addUser', adminId);
       socketId.on('getUsers', (data) => {
         setOnlineUsers(data);
       });
     }
-  }, [admin]);
+  }, [user]);
 
   const onlineCheck = (chat) => {
-    const chatMembers = chat.members.find((member) => member !== admin?._id);
+    const chatMembers = chat.members.find((member) => member !== user?._id);
     const online = onlineUsers.find((user) => user.userId === chatMembers);
     return online ? true : false;
   };
@@ -94,17 +95,17 @@ const DashboardMessages = () => {
     e.preventDefault();
 
     const message = {
-      sender: admin._id,
+      sender: user._id,
       text: newMessage,
       conversationId: currentChat._id,
     };
 
     const receiverId = currentChat.members.find(
-      (member) => member.id !== admin._id
+      (member) => member.id !== user?._id
     );
 
     socketId.emit('sendMessage', {
-      senderId: admin._id,
+      senderId: user?._id,
       receiverId,
       text: newMessage,
     });
@@ -129,13 +130,13 @@ const DashboardMessages = () => {
   const updateLastMessage = async () => {
     socketId.emit('updateLastMessage', {
       lastMessage: newMessage,
-      lastMessageId: admin._id,
+      lastMessageId: user._id,
     });
 
     await axios
       .put(`${server}/conversation/update-last-message/${currentChat._id}`, {
         lastMessage: newMessage,
-        lastMessageId: admin._id,
+        lastMessageId: user._id,
       })
       .then((res) => {
         console.log(res.data.conversation);
@@ -146,10 +147,11 @@ const DashboardMessages = () => {
       });
   };
   return (
-    <div className="w-[90%] bg-white m-5 h-[85vh] overflow-y-scroll hide-scrollbar rounded">
+    <div className="w-full">
       {/* All messages list */}
       {!open && (
         <>
+          <Header />
           <h1 className="text-center text-[30px] py-3 font-Poppins ">
             All Messages
           </h1>
@@ -161,7 +163,7 @@ const DashboardMessages = () => {
                 index={index}
                 setOpen={setOpen}
                 setCurrentChat={setCurrentChat}
-                me={admin._id}
+                me={user?._id}
                 setUserData={setUserData}
                 userData={userData}
                 online={onlineCheck(item)}
@@ -177,9 +179,8 @@ const DashboardMessages = () => {
           setNewMessage={setNewMessage}
           sendMessageHandler={sendMessageHandler}
           messages={messages}
-          adminId={admin._id}
+          userId={user._id}
           userData={userData}
-          setMessages={setMessages}
           activeStatus={activeStatus}
         />
       )}
@@ -198,28 +199,28 @@ const MessageList = ({
   online,
   setActiveStatus,
 }) => {
-  setActiveStatus(online);
-  const [user, setUser] = useState([]);
   const [active, setActive] = useState(0);
+  const [user, setUser] = useState([]);
   const navigate = useNavigate();
   const handleClick = (id) => {
-    navigate(`?${id}`);
+    navigate(`/inbox?${id}`);
     setOpen(true);
   };
 
   useEffect(() => {
+    setActiveStatus(online);
     const userId = data.members.find((user) => user !== me);
 
     const getUser = async () => {
       try {
-        const res = await axios.get(`${server}/user/user-info/${userId}`);
-        setUser(res.data.user);
+        const res = await axios.get(`${server}/admin/get-admin-info/${userId}`);
+        setUser(res.data.admin);
       } catch (error) {
         console.log(error);
       }
     };
     getUser();
-  }, [me, data, setUser]);
+  }, [me, data, online, setActiveStatus]);
 
   return (
     <div
@@ -247,11 +248,11 @@ const MessageList = ({
         )}
       </div>
       <div className="pl-3">
-        <h1 className="font-[600]">{userData?.name}</h1>
+        <h1 className="font-[600]">{user?.name}</h1>
         <p className="text-[14px] text-[#000000a1]">
           {data?.lastMessageId !== user?._id
             ? 'You'
-            : user?.name.split(' ')[0] + ' '}
+            : user?.name?.split(' ')[0] + ' '}
           : {data?.lastMessage}
         </p>
       </div>
@@ -265,7 +266,7 @@ const AdminInbox = ({
   setNewMessage,
   sendMessageHandler,
   messages,
-  adminId,
+  userId,
   userData,
   activeStatus,
 }) => {
@@ -298,13 +299,13 @@ const AdminInbox = ({
         {messages &&
           messages.map((item, index) => (
             <div
-              key={index} // It's good to use a unique key for each child in a list
+              key={index}
               className={`flex w-full my-2 ${
-                item.sender === adminId ? 'justify-end' : 'justify-start'
+                item.sender === userId ? 'justify-end' : 'justify-start'
               }`}
             >
               {/* For messages from others, include the image to the left */}
-              {item.sender !== adminId && (
+              {item.sender !== userId && (
                 <img
                   src={`${backend_url}/${userData?.avatar?.url}`}
                   alt=""
@@ -312,15 +313,14 @@ const AdminInbox = ({
                 />
               )}
 
-              {/* Text container */}
               <div
                 className={`flex flex-col w-max ${
-                  item.sender === adminId ? 'items-end' : 'items-start'
+                  item.sender === userId ? 'items-end' : 'items-start'
                 }`}
               >
                 <div
                   className={`p-2 rounded ${
-                    item.sender === adminId ? 'bg-[#000]' : 'bg-[#b19a5696]'
+                    item.sender === userId ? 'bg-[#000]' : 'bg-[#b19a5696]'
                   } text-[#fff]`}
                 >
                   <p>{item.text}</p>

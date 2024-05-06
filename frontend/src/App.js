@@ -20,6 +20,7 @@ import {
   AdminLoginPage,
   OrderDetailsPage,
   TrackOrderPage,
+  UserInboxPage,
 } from './routes/Routes.js';
 import {
   AdminHomePage,
@@ -89,6 +90,15 @@ const App = () => {
           element={
             <ProtectedRoute>
               <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/inbox"
+          element={
+            <ProtectedRoute>
+              <UserInboxPage />
             </ProtectedRoute>
           }
         />
