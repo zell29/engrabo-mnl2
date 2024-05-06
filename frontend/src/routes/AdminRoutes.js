@@ -10,6 +10,7 @@ import AdminAllOrders from '../pages/Admin/AdminAllOrders';
 import AdminOrdersDetails from '../pages/Admin/AdminOrdersDetails';
 import AdminAllRefunds from '../pages/Admin/AdminAllRefunds';
 import AdminUpdatePasswordPage from '../pages/Admin/AdminUpdatePasswordPage';
+import AdminInboxPage from '../pages/Admin/AdminInboxPage';
 export {
   AdminDashboardPage,
   AdminCreateProduct,
@@ -23,4 +24,5 @@ export {
   AdminOrdersDetails,
   AdminAllRefunds,
   AdminUpdatePasswordPage,
+  AdminInboxPage,
 };
