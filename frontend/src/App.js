@@ -36,6 +36,7 @@ import {
   AdminAllRefunds,
   AdminUpdatePasswordPage,
   AdminInboxPage,
+  AdminAllUsers
 } from './routes/AdminRoutes';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -178,6 +179,16 @@ const App = () => {
             </AdminProtectedRoute>
           }
         />
+
+        {/* Route for all users */}
+        <Route
+          path="/dashboard-users"
+          element={
+            <AdminProtectedRoute>
+              <AdminAllUsers />
+            </AdminProtectedRoute>
+          }
+        /> 
 
         <Route
           path="/order/:id"

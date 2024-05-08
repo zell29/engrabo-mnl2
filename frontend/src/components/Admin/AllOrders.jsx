@@ -82,6 +82,7 @@ const AllOrders = () => {
 
   return (
     <>
+    
       {isLoading ? (
         <Loader />
       ) : (
@@ -93,6 +94,7 @@ const AllOrders = () => {
             disableSelectionOnClick
             autoHeight
           />
+          
         </div>
       )}
     </>

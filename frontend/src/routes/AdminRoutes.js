@@ -11,6 +11,8 @@ import AdminOrdersDetails from '../pages/Admin/AdminOrdersDetails';
 import AdminAllRefunds from '../pages/Admin/AdminAllRefunds';
 import AdminUpdatePasswordPage from '../pages/Admin/AdminUpdatePasswordPage';
 import AdminInboxPage from '../pages/Admin/AdminInboxPage';
+
+import AdminAllUsers from '../pages/Admin/AdminAllUsers'; 
 export {
   AdminDashboardPage,
   AdminCreateProduct,
@@ -25,4 +27,5 @@ export {
   AdminAllRefunds,
   AdminUpdatePasswordPage,
   AdminInboxPage,
+  AdminAllUsers
 };
