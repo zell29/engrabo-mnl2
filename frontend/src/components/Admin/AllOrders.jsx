@@ -67,7 +67,7 @@ const AllOrders = () => {
     },
   ];
 
-  const row = [];
+ const row = [];
 
   orders &&
     orders.forEach((item) => {

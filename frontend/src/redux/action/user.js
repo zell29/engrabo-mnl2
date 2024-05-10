@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 
 // load user
 export const loadUser = () => async (dispatch) => {
+  console.log("testing");
   try {
     dispatch({
       type: 'LoadUserRequest',

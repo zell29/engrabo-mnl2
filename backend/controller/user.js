@@ -358,10 +358,10 @@ router.put(
   })
 );
 
-// Get all user by admin
+// Get all user by admin, removed the authentication
 router.get(
   '/admin-all-users',
-  isAuthenticated,
+  // isAuthenticated,
   catchAsyncError(async (req, res, next) => {
     try {
       const users = await User.find().sort({

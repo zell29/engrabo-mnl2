@@ -15,13 +15,14 @@ const AllUsers = () => {
     const {users, isLoading} = useSelector((state) => state.user);
     const admin = useSelector((state) => state.admin);
 
-    console.log(users)
     const dispatch = useDispatch()
 
     useEffect(()=>{
         dispatch(getAllUsers(admin._id));
     }, [dispatch, admin._id]);
 
+    
+    console.log(users)
     const columns = [
     { field: 'id', headerName: 'User ID', minWidth: 150, flex: 0.7 },
     { field: 'name', headerName: 'User Name', minWidth: 150, flex: 0.7 },

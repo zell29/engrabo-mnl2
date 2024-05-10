@@ -19,7 +19,8 @@ connectDatabase();
 
 // server
 const server = app.listen(process.env.PORT, () => {
-  console.log(`Server is running on https://localhost: ${process.env.PORT}`);
+  console.log(`Server is running on https://localhost:${process.env.PORT}`);
+
 });
 
 // unhandled promise rejection
@@ -31,3 +32,4 @@ process.on('unhandledRejection', (err) => {
     process.exit(1);
   });
 });
+
