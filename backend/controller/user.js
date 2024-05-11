@@ -363,6 +363,7 @@ router.get(
   '/admin-all-users',
   // isAuthenticated,
   catchAsyncError(async (req, res, next) => {
+  
     try {
       const users = await User.find().sort({
         createdAt: -1,

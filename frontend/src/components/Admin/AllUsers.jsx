@@ -12,7 +12,7 @@ import { minWidth } from '@mui/system';
 
 // this will be the one who will call the backend, with the use of redux
 const AllUsers = () => {
-    const {users, isLoading} = useSelector((state) => state.user);
+    const {usersList, isLoading} = useSelector((state) => state.user);
     const admin = useSelector((state) => state.admin);
 
     const dispatch = useDispatch()
@@ -22,7 +22,7 @@ const AllUsers = () => {
     }, [dispatch, admin._id]);
 
     
-    console.log(users)
+    console.log("list of users are: ", usersList);
     const columns = [
     { field: 'id', headerName: 'User ID', minWidth: 150, flex: 0.7 },
     { field: 'name', headerName: 'User Name', minWidth: 150, flex: 0.7 },
@@ -36,8 +36,7 @@ const AllUsers = () => {
     },
     ];
 
-    // Create rows from users
-    const rows = users.map((user) => ({
+    const rows = usersList.map((user) => ({
         id: user._id,
         name: user.name,
         email: user.email,
@@ -58,9 +57,12 @@ const AllUsers = () => {
             autoHeight
           />
         </div>
-      )}
+      )} 
     </>
+
   );
 }
+
+
 
 export default AllUsers;

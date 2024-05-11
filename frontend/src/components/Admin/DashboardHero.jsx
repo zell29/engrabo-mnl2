@@ -22,7 +22,7 @@ const DashboardHero = () => {
   const { orders } = useSelector((state) => state.order);
   const { admin } = useSelector((state) => state.admin);
   const { products } = useSelector((state) => state.products);
-  const { users } = useSelector((state) => state.user);
+  const { usersList } = useSelector((state) => state.user);
   const [deliveredOrder, setDeliveredOrder] = useState(null);
 
   useEffect(() => {
@@ -35,6 +35,7 @@ const DashboardHero = () => {
     setDeliveredOrder(orderData);
   }, [dispatch, admin._id, orders]);
 
+  // total earning in the dashboard 
   const totalEarningWithoutTax =
     deliveredOrder &&
     deliveredOrder.reduce((acc, item) => acc + item.totalPrice, 0);
@@ -42,6 +43,23 @@ const DashboardHero = () => {
   const serviceCharge = totalEarningWithoutTax * 0.1;
 
   const availableBalance = totalEarningWithoutTax - serviceCharge.toFixed(2);
+
+  // total expenses of the dashboard, this is just based on product and stock only. Monthy/Yearly expenses is yet to develop
+ const ComputetotalExpenses = () => {
+    if (!products || products.length === 0) {
+      return 0;
+    }
+
+    // Iterate over each product and calculate its total cost based on stock and original price
+    const totalExpenses = products.reduce((total, product) => {
+      const productExpense = product.stock * product.originalPrice;
+      return total + productExpense;
+    }, 0);
+
+    return totalExpenses;
+ }
+
+ const totalExpenses = ComputetotalExpenses();
 
   const columns = [
     { field: 'id', headerName: 'Order ID', minWidth: 150, flex: 0.7 },
@@ -111,6 +129,10 @@ const DashboardHero = () => {
   const refundApprovedCount = orders
     ? orders.filter((order) => order.status === 'Refund Approved').length
     : 0;
+
+
+  // computes the total expenses for the whole month
+
   return (
     <div className="w-full p-8">
       <h3 className="text-[22px] font-Poppins pb-2">Overview</h3>
@@ -124,7 +146,7 @@ const DashboardHero = () => {
             <IoBagHandle className='text-2xl text-white'/>
           </div>
           <div className="pl-4">
-            <span className="text-sm text-gray-500 font-light">Total Sales (less shipping cost)</span>
+            <span className="text-sm text-gray-500 font-light">Total Sales</span>
             <div className="flex items-center">
               <strong className='text-xl text-gray-700 font-semibold'>₱ {availableBalance.toFixed(2)}</strong>
             </div>
@@ -137,9 +159,9 @@ const DashboardHero = () => {
             <IoPieChart className="text-2xl text-white" />
           </div>
           <div className="pl-4">
-            <span className="text-sm text-gray-500 font-light">Total Expenses / Cost of Sales</span>
+            <span className="text-sm text-gray-500 font-light">Total Expenses</span>
             <div className="flex items-center">
-              <strong className="text-xl text-gray-700 font-semibold">$3423 (Mock)</strong>
+              <strong className="text-xl text-gray-700 font-semibold">{totalExpenses}</strong>
             </div>
           </div>
         </BoxWrapper>
@@ -153,7 +175,7 @@ const DashboardHero = () => {
             <div className="pl-4">
               <span className="text-sm text-gray-500 font-light">Total Customers</span>
               <div className="flex items-center">
-                <strong className="text-xl text-gray-700 font-semibold">{users && users.length} 43 </strong>
+                <strong className="text-xl text-gray-700 font-semibold">{usersList && usersList.length}</strong>
               </div>
             </div>
           </BoxWrapper>
@@ -260,6 +282,7 @@ const data = [
 		</div>
 	);
 }
+
 
 
 export default DashboardHero;

@@ -5,6 +5,7 @@ const initialState = {
   loading: false, // Ensure all initial state properties are defined here
   user: null,
   error: null,
+  usersList: [] // state that will store the list of users for admin
 };
 
 export const userReducer = createReducer(initialState, (builder) => {
@@ -74,7 +75,7 @@ export const userReducer = createReducer(initialState, (builder) => {
     })
     .addCase('getAllUsersSuccess', (state, action) => {
       state.loading = false;
-      state.user = action.payload.user;
+      state.usersList = action.payload.users;
     })
     .addCase('getAllUsersFailed', (state, action) => {
       state.addressloading = false;

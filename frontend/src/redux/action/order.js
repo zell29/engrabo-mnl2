@@ -26,7 +26,6 @@ export const getAllOrdersOfUser = (userId) => async (dispatch) => {
 
 // Get all order of user on admin
 export const getAllOrdersOfAdmin = (adminId) => async (dispatch) => {
-  console.log("this is the admin id: ", adminId);
   try {
     dispatch({
       type: 'getAllOrdersAdminRequest',

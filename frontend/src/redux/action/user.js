@@ -4,7 +4,6 @@ import { toast } from 'react-toastify';
 
 // load user
 export const loadUser = () => async (dispatch) => {
-  console.log("testing");
   try {
     dispatch({
       type: 'LoadUserRequest',
@@ -93,7 +92,8 @@ export const getAllUsers = () => async (dispatch) => {
     const { data } = await axios.get(`${server}/user/admin-all-users`, {
       withCredentials: true,
     });
-
+    
+    // i can get the data from the server backend, the problem is here in           the frontend
     dispatch({
       type: 'getAllUsersSuccess',
       payload: { users: data.users },
@@ -105,6 +105,8 @@ export const getAllUsers = () => async (dispatch) => {
     });
   }
 };
+
+
 
 // Update user address
 export const updateUserAddress =
