@@ -21,7 +21,7 @@ const AllUsers = () => {
         dispatch(getAllUsers(admin._id));
     }, [dispatch, admin._id]);
 
-    
+
     console.log("list of users are: ", usersList);
     const columns = [
     { field: 'id', headerName: 'User ID', minWidth: 150, flex: 0.7 },
@@ -30,7 +30,7 @@ const AllUsers = () => {
     {
       field: 'phonenumber',
       headerName: 'User Phone Number',
-      type: 'number',
+      type: 'string',
       minWidth: 150,
       flex: 0.8,
     },

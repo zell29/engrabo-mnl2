@@ -80,3 +80,4 @@ export const categoryReducer = createReducer(initialState, (builder) => {
       state.error = null;
     });
 });
+

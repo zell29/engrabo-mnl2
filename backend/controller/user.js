@@ -12,6 +12,7 @@ const sendToken = require('../utils/jwtToken');
 const { isAuthenticated, isAdmin } = require('../middleware/auth');
 const catchAsyncError = require('../middleware/catchAsyncError');
 
+// Create - user
 router.post('/create-user', upload.single('file'), async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
@@ -361,7 +362,7 @@ router.put(
 // Get all user by admin, removed the authentication
 router.get(
   '/admin-all-users',
-  // isAuthenticated,
+  isAdmin,
   catchAsyncError(async (req, res, next) => {
   
     try {

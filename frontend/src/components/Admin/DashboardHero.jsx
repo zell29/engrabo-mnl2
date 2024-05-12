@@ -52,7 +52,7 @@ const DashboardHero = () => {
 
     // Iterate over each product and calculate its total cost based on stock and original price
     const totalExpenses = products.reduce((total, product) => {
-      const productExpense = product.stock * product.originalPrice;
+      const productExpense = product.stock * product.grossPrice;
       return total + productExpense;
     }, 0);
 
@@ -199,7 +199,7 @@ const DashboardHero = () => {
 
       {/* transactions */}
       <div className="transaction-analytic">
-        {transactionChart()}
+        {TransactionChart()}
       </div>
 
       <h3 className="text-[22px] font-Poppins pb-2 text-[171203]">
@@ -221,68 +221,90 @@ const DashboardHero = () => {
   );
 };
 
-const transactionChart = () => {
-  // mock data, this should be from the database we should get the 
-  // month - income - expenses - number of orders in the month 
-const data = [
-	
-	{
-		month: 'Feb',
-		expense: 3000,
-		income: 1398,
-		orders: 900
-	},
-	{
-		month: 'Mar',
-		expense: 2000,
-		income: 9800,
-		orders: 1100
-	},
-	{
-		month: 'Apr',
-		expense: 2780,
-		income: 3908,
-		orders: 1200
-	},
-	{
-		month: 'May',
-		expense: 1890,
-		income: 4800,
-		orders: 1050
-	}
-];
 
-	return (
-		<div className="h-[22rem] bg-white p-4 rounded-sm border border-gray-200 flex flex-col flex-1">
-			<strong className="text-gray-700 font-medium">Transactions</strong>
-			<div className="mt-3 w-full flex-1 text-xs">
-				<ResponsiveContainer width="100%" height="100%">
-					<BarChart
-						width={500}
-						height={600}
-						data={data}
-						margin={{
-							top: 20,
-							right: 10,
-							left: -10,
-							bottom: 0
-						}}
-					>
-						<CartesianGrid strokeDasharray="3 3 0 0" vertical={false} />
-						<XAxis dataKey="month" />
+const TransactionChart = () => {
+  const data = [
+    {
+      month: 'Feb',
+      expense: 3000,
+      income: 1398,
+      orders: 900
+    },
+    {
+      month: 'Mar',
+      expense: 2000,
+      income: 9800,
+      orders: 1100
+    },
+    {
+      month: 'Apr',
+      expense: 2780,
+      income: 3908,
+      orders: 1200
+    },
+    {
+      month: 'May',
+      expense: 1890,
+      income: 4800,
+      orders: 1050
+    }
+  ];
+
+  const downloadCsv = () => {
+    const headers = Object.keys(data[0]).join(',');
+    const rows = data.map(item => Object.values(item).join(','));
+    const csv = [headers, ...rows].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'transactions.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  useEffect(() => {
+  }, []); // Empty dependency array ensures that this effect runs only once, similar to componentDidMount
+
+  return (
+    <div className="h-[22rem] bg-white p-4 rounded-sm border border-gray-200 flex flex-col flex-1">
+      <div className='flex justify-between items-center'>
+        <div className='align-middle'>
+          <strong className="text-gray-700 font-medium">Transactions</strong>
+        </div>
+        <div className="mb-2 align-middle">
+          <button className="bg-blue-400 hover:bg-blue-700 text-white font-medium py-1 px-2 rounded" onClick={downloadCsv}>
+            Download CSV
+          </button>
+        </div>
+      </div>
+      <div className="mt-3 w-full flex-1 text-xs">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart
+            width={500}
+            height={600}
+            data={data}
+            margin={{
+              top: 20,
+              right: 10,
+              left: -10,
+              bottom: 0
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3 0 0" vertical={false} />
+            <XAxis dataKey="month" />
             <YAxis tickCount={1000} tick={{ fontSize: 12, fontFamily: 'Arial', dy: 5 }} />
-						<Tooltip />
-						<Legend />
-						<Bar dataKey="income" fill="#0ea5e9" />
-						<Bar dataKey="expense" fill="#ea580c" />
-						<Bar dataKey="orders" fill="#82ca9d" /> 
-					</BarChart>
-				</ResponsiveContainer>
-			</div>
-		</div>
-	);
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="income" fill="#0ea5e9" />
+            <Bar dataKey="expense" fill="#ea580c" />
+            <Bar dataKey="orders" fill="#82ca9d" />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
+  );
 }
-
-
 
 export default DashboardHero;

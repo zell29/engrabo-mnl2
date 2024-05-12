@@ -22,6 +22,7 @@ const CreateProduct = ({ setOpen }) => {
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
   const [tags, setTags] = useState('');
+  const [grossPrice, setGrossPrice] = useState(''); // add gross price
   const [originalPrice, setOriginalPrice] = useState('');
   const [discountPrice, setDiscountPrice] = useState('');
   const [stock, setStock] = useState();
@@ -61,6 +62,7 @@ const CreateProduct = ({ setOpen }) => {
     newForm.append('description', description);
     newForm.append('category', category);
     newForm.append('tags', tags);
+    newForm.append('grossPrice', grossPrice); 
     newForm.append('originalPrice', originalPrice);
     newForm.append('discountPrice', discountPrice);
     newForm.append('stock', stock);
@@ -159,7 +161,23 @@ const CreateProduct = ({ setOpen }) => {
         </div>
         <br />
 
-        {/* Original Price */}
+        {/* Gross Price */}
+        <div>
+          <label className="pb-2 text-[#171203]">
+            Gross Price <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="number"
+            name="price"
+            value={grossPrice}
+            className="mt-2 appearance-none block w-full px-3 h-[35px]  border border-[#9e8a4f] rounded-[3px] shadow-sm placeholder-[#9e8a4f] focus:outline-none focus:ring-brown-dark focus:border-brown-dark"
+            onChange={(e) => setGrossPrice(e.target.value)}
+            placeholder="Enter your product gross price..."
+          />
+        </div>
+        <br />
+
+        {/* Original Selling Price */}
         <div>
           <label className="pb-2 text-[#171203]">
             Original Price <span className="text-red-500">*</span>
